@@ -8,12 +8,12 @@ export default struct ListChatContentLeftItem {
 
   build() {
     Row() {
-      Image(this.data?.headSrc)
-        .width(48)
-        .height(48)
-        .borderRadius(4)
-        .margin({ left: 20, right: 8 })
-        .objectFit(ImageFit.Cover)
+      // Image(this.data?.headSrc)
+      //   .width(48)
+      //   .height(48)
+      //   .borderRadius(4)
+      //   .margin({ left: 20, right: 8 })
+      //   .objectFit(ImageFit.Cover)
 
       Path()
         .commands(`M${vp2px(10)} 0 L0 ${vp2px(7)} ${vp2px(10)} ${vp2px(14)} Z`)

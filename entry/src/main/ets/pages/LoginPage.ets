@@ -144,7 +144,7 @@ struct LoginPage {
             top: $r('app.float.logo_margin_top'),
             bottom: $r('app.float.logo_margin_bottom')
           })
-        Text($r('app.string.login_page'))
+        Text('聊天助手')
           .fontSize($r('app.float.title_text_size'))
           .fontWeight(FontWeight.Medium)
           .fontColor($r('app.color.title_text_color'))
@@ -186,17 +186,17 @@ struct LoginPage {
           right: $r('app.float.input_padding_left')
         })
 
-        Row() {
-          Text($r('app.string.message_login')).blueTextStyle()
-          Text($r('app.string.forgot_password')).blueTextStyle()
-        }
-        .justifyContent(FlexAlign.SpaceBetween)
-        .width(CommonConstants.FULL_PARENT)
-        .padding({
-          top: $r('app.float.forgot_margin_top'),
-          left: $r('app.float.forgot_margin_left'),
-          right: $r('app.float.forgot_margin_right')
-        })
+        // Row() {
+        //   // Text($r('app.string.message_login')).blueTextStyle()
+        //   // Text($r('app.string.forgot_password')).blueTextStyle()
+        // }
+        // .justifyContent(FlexAlign.SpaceBetween)
+        // .width(CommonConstants.FULL_PARENT)
+        // .padding({
+        //   top: $r('app.float.forgot_margin_top'),
+        //   left: $r('app.float.forgot_margin_left'),
+        //   right: $r('app.float.forgot_margin_right')
+        // })
 
         Button($r('app.string.login'), { type: ButtonType.Capsule })
           .width(CommonConstants.BUTTON_WIDTH)

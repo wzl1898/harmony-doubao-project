@@ -9,14 +9,14 @@ export default struct ListChatItem {
 
   build() {
     Row() {
-      Image(this.data.headSrc)
-        .width(60)
-        .height(60)
-        .margin({ right: 15 })
-        .objectFit(ImageFit.Cover)
-        .borderRadius(6)
-        .borderWidth(2)
-        .borderColor("#f0f0f0")
+      // Image(this.data.headSrc)
+      //   .width(60)
+      //   .height(60)
+      //   .margin({ right: 15 })
+      //   .objectFit(ImageFit.Cover)
+      //   .borderRadius(6)
+      //   .borderWidth(2)
+      //   .borderColor("#f0f0f0")
       Column() {
         Text(this.data.nickname)
           .fontColor(Color.Black)

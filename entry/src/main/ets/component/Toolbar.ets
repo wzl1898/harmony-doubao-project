@@ -31,18 +31,19 @@ export default struct Toolbar {
           .fontWeight(500)
 
         if (this.subIconSrc === null) {
-          Text(this.subTitle)
+          Text("")
             .fontColor(Color.Black)
             .fontSize(16)
             .margin({ right: 15 })
             .fontWeight(400)
-            .onClick(unDevTip)
+            // .onClick(unDevTip)
         } else {
-          Image(this.subIconSrc)
-            .width(25)
-            .height(25)
+          Text("")
+            .fontColor(Color.Black)
+            .fontSize(16)
             .margin({ right: 15 })
-            .onClick(unDevTip)
+            .fontWeight(400)
+            // .onClick(unDevTip)
         }
 
       }

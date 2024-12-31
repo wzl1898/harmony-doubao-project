@@ -65,12 +65,12 @@ export default struct ListChatContentRightItem {
         })
         .strokeWidth(0)
 
-      Image(this.data?.headSrc)
-        .width(48)
-        .height(48)
-        .borderRadius(4)
-        .margin({ left: 8, right: 20 })
-        .objectFit(ImageFit.Cover)
+      // Image(this.data?.headSrc)
+      //   .width(48)
+      //   .height(48)
+      //   .borderRadius(4)
+      //   .margin({ left: 8, right: 20 })
+      //   .objectFit(ImageFit.Cover)
 
     }.alignItems(VerticalAlign.Top)
   }

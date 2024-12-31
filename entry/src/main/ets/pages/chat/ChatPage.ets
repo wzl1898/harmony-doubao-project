@@ -355,20 +355,20 @@ export default struct ChatPage {
       Row() {
 
         if (this.inputType == WXInputType.keyboard) {
-          Image($r("app.media.ic_use_voice"))
-            .width(33)
-            .height(33)
-            .borderRadius(4)
-            .margin({ left: 15, right: 15 })
-            .objectFit(ImageFit.Cover)
-            .onClick(async () => {
-              const result = await PermissionUtils.request(["ohos.permission.MICROPHONE"])
-              if (!result) {
-                ToastUtils.show("请先授权麦克风权限")
-              }
-              this.inputType = WXInputType.voice
-              this.showFuncBarWithAnim(false)
-            })
+          // Image($r("app.media.ic_use_voice"))
+          //   .width(33)
+          //   .height(33)
+          //   .borderRadius(4)
+          //   .margin({ left: 15, right: 15 })
+          //   .objectFit(ImageFit.Cover)
+          //   .onClick(async () => {
+          //     const result = await PermissionUtils.request(["ohos.permission.MICROPHONE"])
+          //     if (!result) {
+          //       ToastUtils.show("请先授权麦克风权限")
+          //     }
+          //     this.inputType = WXInputType.voice
+          //     this.showFuncBarWithAnim(false)
+          //   })
 
           TextArea({ text: $$this.chatText, placeholder: '', controller: this.controller })
             .placeholderFont({ size: 20, weight: 400 })
@@ -416,13 +416,13 @@ export default struct ChatPage {
         }
 
 
-        Image($r("app.media.ic_emoji_pack"))
-          .width(33)
-          .height(33)
-          .borderRadius(4)
-          .margin({ left: 15, right: 5 })
-          .objectFit(ImageFit.Cover)
-          .onClick(unDevTip)
+        // Image($r("app.media.ic_emoji_pack"))
+        //   .width(33)
+        //   .height(33)
+        //   .borderRadius(4)
+        //   .margin({ left: 15, right: 5 })
+        //   .objectFit(ImageFit.Cover)
+        //   .onClick(unDevTip)
 
 
         Text("发送")
@@ -439,19 +439,19 @@ export default struct ChatPage {
             this.sendTextMsg()
           })
 
-        Image($r("app.media.ic_add"))
-          .width(33)
-          .height(33)
-          .borderRadius(4)
-          .visibility(this.chatText.length == 0 ? Visibility.Visible : Visibility.None)
-          .margin({ left: 15, right: 8 })
-          .objectFit(ImageFit.Cover)
-          .onClick(() => {
-            if (!this.showFuncBar) {
-              this.inputType = WXInputType.keyboard
-            }
-            this.showFuncBarWithAnim(!this.showFuncBar)
-          })
+        // Image($r("app.media.ic_add"))
+        //   .width(33)
+        //   .height(33)
+        //   .borderRadius(4)
+        //   .visibility(this.chatText.length == 0 ? Visibility.Visible : Visibility.None)
+        //   .margin({ left: 15, right: 8 })
+        //   .objectFit(ImageFit.Cover)
+        //   .onClick(() => {
+        //     if (!this.showFuncBar) {
+        //       this.inputType = WXInputType.keyboard
+        //     }
+        //     this.showFuncBarWithAnim(!this.showFuncBar)
+        //   })
 
       }
       .padding({ top: 10, bottom: 10 })
