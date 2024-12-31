@@ -2,7 +2,7 @@ import home from './home/Home'
 import router from '@ohos.router'
 import contact from './contact/Contact'
 import discovery from './discovery/Discovery'
-import mine from './mine/Mine'
+import Setting from './mine/Setting'
 import WindowManager from '../utils/WindowManager'
 
 @Entry
@@ -10,7 +10,7 @@ import WindowManager from '../utils/WindowManager'
 struct Index {
   @State private currentIndex: number = 0
   private tabController: TabsController = new TabsController()
-  private tabTitles: string[] = ['新建对话']
+  private tabTitles: string[] = ['主页','新建对话', '我的']
   private tabTextColors: string[] = ["#040404", "#57be6a"]
   private tabTipCounts: number[] = [0]
 
@@ -24,22 +24,22 @@ struct Index {
         .tabBar(this.createTabMenu(0))
 
         // // 通讯录
-        // TabContent() {
-        //   contact()
-        // }
-        // .tabBar(this.createTabMenu(1))
+        TabContent() {
+          // contact()
+        }
+        .tabBar(this.createTabMenu(1))
         //
-        // // 发现
+        // 发现
         // TabContent() {
         //   discovery()
         // }
         // .tabBar(this.createTabMenu(2))
-        //
-        // // 我的
-        // TabContent() {
-        //   mine()
-        // }
-        // .tabBar(this.createTabMenu(3))
+
+        // 我的
+        TabContent() {
+          Setting()
+        }
+        .tabBar(this.createTabMenu(2))
       }
       .width("100%")
       .height("100%")
@@ -49,7 +49,14 @@ struct Index {
       .layoutWeight(1)
       .padding({ bottom: WindowManager.navBarHeight })
       .onChange((index: number) => {
+        if (index == 1) {
+          router.pushUrl({
+            url: 'pages/chat/ChatPage',
+            params: {}
+          })
+        }
         this.currentIndex = index
+
       })
 
     }
@@ -98,15 +105,37 @@ struct Index {
             .margin({ bottom: 3 })
             .onClick(()=>{
               //TODO: create and save a init ChatContentItemData, and pushurl to the chatpage
-              router.pushUrl({
-                url: 'pages/chat/ChatPage',
-                params: { }
-              })
+              let url_str = ''
+              if (this.currentIndex == 1){
+                url_str = 'pages/chat/ChatPage'
+              }else if (this.currentIndex == 0){
+                url_str = 'pages/Index'
+              }else if (this.currentIndex == 2){
+                url_str = 'pages/Mine'
+              }
+
             })
           // 文本
           Text(this.tabTitles[index])
             .fontColor("#ff2922c1")
             .fontSize(10)
+            .onClick(()=>{
+              //TODO: create and save a init ChatContentItemData, and pushurl to the chatpage
+              let url_str = ''
+              if (this.currentIndex == 1){
+                url_str = 'pages/chat/ChatPage'
+              }else if (this.currentIndex == 0){
+                url_str = 'pages/Index'
+              }else if (this.currentIndex == 2){
+                url_str = 'pages/Mine'
+              }
+              if (this.currentIndex == 1) {
+                router.pushUrl({
+                  url: url_str,
+                  params: {}
+                })
+              }
+            })
         }
         .backgroundColor(Color.Transparent)
         .justifyContent(FlexAlign.Center)

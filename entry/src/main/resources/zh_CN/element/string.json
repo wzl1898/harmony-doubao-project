@@ -1,16 +1,232 @@
 {
   "string": [
     {
+      "name": "EntryAbility_label",
+      "value": "聊天助手"
+    },
+    {
       "name": "module_desc",
-      "value": "模块描述"
+      "value": "module description"
     },
     {
       "name": "EntryAbility_desc",
-      "value": "description"
+      "value": "Main program entry"
     },
     {
-      "name": "EntryAbility_label",
-      "value": "微信鸿蒙版"
+      "name": "login_page",
+      "value": "登录界面"
+    },
+    {
+      "name": "login_more",
+      "value": "登录账号以使用更多服务"
+    },
+    {
+      "name": "account",
+      "value": "账号"
+    },
+    {
+      "name": "password",
+      "value": "密码"
+    },
+    {
+      "name": "login",
+      "value": "登录"
+    },
+    {
+      "name": "register_account",
+      "value": "注册账号"
+    },
+    {
+      "name": "forgot_password",
+      "value": "忘记密码"
+    },
+    {
+      "name": "message_login",
+      "value": "短信验证码登录"
+    },
+    {
+      "name": "other_login_method",
+      "value": "其他方式登录"
+    },
+    {
+      "name": "my_love",
+      "value": "我的最爱"
+    },
+    {
+      "name": "history_record",
+      "value": "历史记录"
+    },
+    {
+      "name": "message",
+      "value": "消息"
+    },
+    {
+      "name": "shopping_cart",
+      "value": "购物车"
+    },
+    {
+      "name": "my_goal",
+      "value": "我的目标"
+    },
+    {
+      "name": "group",
+      "value": "圈子"
+    },
+    {
+      "name": "favorites",
+      "value": "收藏"
+    },
+    {
+      "name": "recycle_bin",
+      "value": "回收站"
+    },
+    {
+      "name": "home_list",
+      "value": "列表"
+    },
+    {
+      "name": "message_login_prompt",
+      "value": "用户名或密码不正确请重新输入"
+    },
+    {
+      "name": "message_user_name",
+      "value": "请输入用户名"
+    },
+    {
+      "name": "message_password_prompt",
+      "value": "输入的密码不相同请重新输入。"
+    },
+    {
+      "name": "message_application_prompt",
+      "value": "请重新启动应用注册。"
+    },
+    {
+      "name": "register_page",
+      "value": "注册账号"
+    },
+    {
+      "name": "register_name",
+      "value": "请输入用户名"
+    },
+    {
+      "name": "register_password",
+      "value": "请输入密码"
+    },
+    {
+      "name": "register_confirm_password",
+      "value": "请再次输入密码"
+    },
+    {
+      "name": "register_face_checkbox",
+      "value": "人脸识别登录"
+    },
+    {
+      "name": "register_fingerprint_checkbox",
+      "value": "指纹识别登录"
+    },
+    {
+      "name": "register_button",
+      "value": "注册"
+    },
+    {
+      "name": "main_tab_home",
+      "value": "首页"
+    },
+    {
+      "name": "home_title",
+      "value": "首页"
+    },
+    {
+      "name": "main_tab_mine",
+      "value": "我的"
+    },
+    {
+      "name": "mine_title",
+      "value": "我的"
+    },
+    {
+      "name": "my_favorite",
+      "value": "我的最爱"
+    },
+    {
+      "name": "main_top",
+      "value": "排行榜"
+    },
+    {
+      "name": "main_text_top",
+      "value": "厦门站，我们不见不散。"
+    },
+    {
+      "name": "main_new",
+      "value": "新品首发"
+    },
+    {
+      "name": "main_brand",
+      "value": "大牌闪购"
+    },
+    {
+      "name": "main_found",
+      "value": "发现好物"
+    },
+    {
+      "name": "main_text_new",
+      "value": "厦门站，我们不见不散。"
+    },
+    {
+      "name": "main_text_found",
+      "value": "厦门站，我们不见不散。"
+    },
+    {
+      "name": "main_text_brand",
+      "value": "更多大牌"
+    },
+    {
+      "name": "setting_list_news",
+      "value": "推送通知"
+    },
+    {
+      "name": "setting_list_data",
+      "value": "数据管理"
+    },
+    {
+      "name": "setting_list_menu",
+      "value": "菜单设置"
+    },
+    {
+      "name": "setting_list_about",
+      "value": "关于"
+    },
+    {
+      "name": "setting_list_storage",
+      "value": "清除缓存"
+    },
+    {
+      "name": "setting_list_privacy",
+      "value": "隐私协议"
+    },
+    {
+      "name": "setting_toggle",
+      "value": "开关"
+    },
+    {
+      "name": "setting_account_name",
+      "value": "李先生"
+    },
+    {
+      "name": "setting_account_email",
+      "value": "2000000@shenhua.cc"
+    },
+    {
+      "name": "setting_button",
+      "value": "退出登录"
+    },
+    {
+      "name": "access_biometric_reason",
+      "value": "用于登录验证使用生物特征识别能力"
+    },
+    {
+      "name": "privacy_window_reason",
+      "value": "用于在登录页面禁止截屏。"
     }
   ]
 }

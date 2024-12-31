@@ -33,38 +33,38 @@ export default struct Mine {
             .fontSize(26)
             .fontWeight(700)
 
-          Text("微信号：wx_023021")
-            .fontColor(Color.Grey)
-            .fontSize(16)
-            .margin({ top: 15 })
+          // Text("微信号：wx_023021")
+          //   .fontColor(Color.Grey)
+          //   .fontSize(16)
+          //   .margin({ top: 15 })
 
-          Text('+ 状态')
-            .fontColor(Color.Grey)
-            .margin({ top: 20 })
-            .padding({ left: 8, right: 8 })
-            .height(25)
-            .fontSize(15)
-            .borderRadius(20)
-            .height(26)
-            .textAlign(TextAlign.Center)
-            .borderWidth(0.7)
-            .borderColor('#666')
-            .backgroundColor(Color.White)
+          // Text('+ 状态')
+          //   .fontColor(Color.Grey)
+          //   .margin({ top: 20 })
+          //   .padding({ left: 8, right: 8 })
+          //   .height(25)
+          //   .fontSize(15)
+          //   .borderRadius(20)
+          //   .height(26)
+          //   .textAlign(TextAlign.Center)
+          //   .borderWidth(0.7)
+          //   .borderColor('#666')
+          //   .backgroundColor(Color.White)
         }
         .margin({ top: 40 })
         .alignItems(HorizontalAlign.Start)
 
         Blank()
-        Image($r('app.media.ic_qrcode'))
-          .width(16)
-          .height(16)
-          .margin({ top: 38, right: 20 })
+        // Image($r('app.media.ic_qrcode'))
+        //   .width(16)
+        //   .height(16)
+        //   .margin({ top: 38, right: 20 })
 
 
-        Image($r("app.media.ic_more"))
-          .width(9)
-          .height(16.364)
-          .margin({ top: 38, right: 15 })
+        // Image($r("app.media.ic_more"))
+        //   .width(9)
+        //   .height(16.364)
+        //   .margin({ top: 38, right: 15 })
 
       }.width("100%")
       .height(203)
@@ -80,58 +80,58 @@ export default struct Mine {
         .strokeWidth(10)
         .lineCap(LineCapStyle.Round)
       ListMenuItem({
-        title: "服务",
+        title: "t",
         iconSrc: $r('app.media.ic_service')
       })
-        .onClick(unDevTip)
-      Divider()
-        .vertical(false)
-        .color("#f3f3f3")
-        .strokeWidth(10)
-        .lineCap(LineCapStyle.Round)
-      ListMenuItem({
-        title: "收藏",
-        iconSrc: $r("app.media.ic_collect")
-      })
-        .onClick(unDevTip)
-
-      Divider()
-        .vertical(false)
-        .color("#f3f3f3")
-        .strokeWidth(1)
-        .lineCap(LineCapStyle.Round)
-      ListMenuItem({
-        title: "朋友圈",
-        iconSrc: $r('app.media.ic_moment_pic')
-      })
-        .onClick(unDevTip)
-      Divider()
-        .vertical(false)
-        .color("#f3f3f3")
-        .strokeWidth(1)
-        .lineCap(LineCapStyle.Round)
-      ListMenuItem({
-        title: "卡包",
-        iconSrc: $r('app.media.ic_card_pkg')
-      }).onClick(unDevTip)
-      Divider()
-        .vertical(false)
-        .color("#f3f3f3")
-        .strokeWidth(1)
-        .lineCap(LineCapStyle.Round)
-      ListMenuItem({
-        title: "表情",
-        iconSrc: $r('app.media.ic_face_icon')
-      }).onClick(unDevTip)
-      Divider()
-        .vertical(false)
-        .color("#f3f3f3")
-        .strokeWidth(10)
-        .lineCap(LineCapStyle.Round)
-      ListMenuItem({
-        title: "设置",
-        iconSrc: $r('app.media.ic_setting')
-      })
+      //   .onClick(unDevTip)
+      // Divider()
+      //   .vertical(false)
+      //   .color("#f3f3f3")
+      //   .strokeWidth(10)
+      //   .lineCap(LineCapStyle.Round)
+      // ListMenuItem({
+      //   title: "收藏",
+      //   iconSrc: $r("app.media.ic_collect")
+      // })
+      //   .onClick(unDevTip)
+      //
+      // Divider()
+      //   .vertical(false)
+      //   .color("#f3f3f3")
+      //   .strokeWidth(1)
+      //   .lineCap(LineCapStyle.Round)
+      // ListMenuItem({
+      //   title: "朋友圈",
+      //   iconSrc: $r('app.media.ic_moment_pic')
+      // })
+      //   .onClick(unDevTip)
+      // Divider()
+      //   .vertical(false)
+      //   .color("#f3f3f3")
+      //   .strokeWidth(1)
+      //   .lineCap(LineCapStyle.Round)
+      // ListMenuItem({
+      //   title: "卡包",
+      //   iconSrc: $r('app.media.ic_card_pkg')
+      // }).onClick(unDevTip)
+      // Divider()
+      //   .vertical(false)
+      //   .color("#f3f3f3")
+      //   .strokeWidth(1)
+      //   .lineCap(LineCapStyle.Round)
+      // ListMenuItem({
+      //   title: "表情",
+      //   iconSrc: $r('app.media.ic_face_icon')
+      // }).onClick(unDevTip)
+      // Divider()
+      //   .vertical(false)
+      //   .color("#f3f3f3")
+      //   .strokeWidth(10)
+      //   .lineCap(LineCapStyle.Round)
+      // ListMenuItem({
+      //   title: "设置",
+      //   iconSrc: $r('app.media.ic_setting')
+      // })
         .onClick(unDevTip)
     }
     .width("100%")

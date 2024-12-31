@@ -258,7 +258,8 @@ export default struct ChatPage {
   }
 
   async aboutToAppear() {
-    this.name = (router.getParams() as ChatPageParam).name
+    // this.name = (router.getParams() as ChatPageParam).name
+    this.name = "豆包"
     await window.getLastWindow(getContext(this)).then(currentWindow => {
       currentWindow.on('keyboardHeightChange', (height) => {
         this.keyboardHeight = height;

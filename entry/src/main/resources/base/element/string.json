@@ -1,16 +1,8 @@
 {
   "string": [
     {
-      "name": "module_desc",
-      "value": "module description"
-    },
-    {
-      "name": "EntryAbility_desc",
-      "value": "description"
-    },
-    {
       "name": "EntryAbility_label",
-      "value": "微信鸿蒙版"
+      "value": "聊天助手"
     },
     {
       "name": "net_permission_reason",
@@ -35,6 +27,394 @@
     {
       "name": "voice_reason",
       "value": "用于获取用户的录音"
+    },
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "Main program entry"
+    },
+    {
+      "name": "login_page",
+      "value": "Login page"
+    },
+    {
+      "name": "login_more",
+      "value": "Log in to your account to use more services"
+    },
+    {
+      "name": "account",
+      "value": "Account"
+    },
+    {
+      "name": "password",
+      "value": "Password"
+    },
+    {
+      "name": "login",
+      "value": "Log in"
+    },
+    {
+      "name": "register_account",
+      "value": "Registering an Account"
+    },
+    {
+      "name": "forgot_password",
+      "value": "Forgot Password"
+    },
+    {
+      "name": "message_login",
+      "value": "SMS verification code login"
+    },
+    {
+      "name": "other_login_method",
+      "value": "Other login methods"
+    },
+    {
+      "name": "my_love",
+      "value": "My favorite"
+    },
+    {
+      "name": "history_record",
+      "value": "History"
+    },
+    {
+      "name": "message",
+      "value": "Message"
+    },
+    {
+      "name": "shopping_cart",
+      "value": "Shopping cart"
+    },
+    {
+      "name": "my_goal",
+      "value": "My goal"
+    },
+    {
+      "name": "group",
+      "value": "Group"
+    },
+    {
+      "name": "favorites",
+      "value": "Favorites"
+    },
+    {
+      "name": "recycle_bin",
+      "value": "Recycle Bin"
+    },
+    {
+      "name": "main_page",
+      "value": "Home"
+    },
+    {
+      "name": "mine_page",
+      "value": "Mine"
+    },
+    {
+      "name": "main_page_rankings",
+      "value": "Rankings"
+    },
+    {
+      "name": "main_page_others",
+      "value": "Xiamen Station, we'll see you."
+    },
+    {
+      "name": "main_page_new",
+      "value": "New product debut"
+    },
+    {
+      "name": "main_Page_brand",
+      "value": "Big name flash"
+    },
+    {
+      "name": "main_page_more",
+      "value": "More Big Names"
+    },
+    {
+      "name": "main_page_found",
+      "value": "Find good things"
+    },
+    {
+      "name": "mine_title_name",
+      "value": "Mr. Lee"
+    },
+    {
+      "name": "mine_title_email",
+      "value": "2000000@shenhua.cc"
+    },
+    {
+      "name": "mine_list_news",
+      "value": "Push Notifications"
+    },
+    {
+      "name": "mine_list_data",
+      "value": "Data Management"
+    },
+    {
+      "name": "mine_list_menu",
+      "value": "Menu Settings"
+    },
+    {
+      "name": "mine_list_about",
+      "value": "About"
+    },
+    {
+      "name": "mine_list_storage",
+      "value": "Clear Cache"
+    },
+    {
+      "name": "mine_list_privacy",
+      "value": "Privacy Agreement"
+    },
+    {
+      "name": "mine_button",
+      "value": "Logout"
+    },
+    {
+      "name": "home_list",
+      "value": "List"
+    },
+    {
+      "name": "mine_toggle",
+      "value": "switch"
+    },
+    {
+      "name": "incomplete_toast",
+      "value": "This function is not perfect, please look forward to it."
+    },
+    {
+      "name": "please_input_account",
+      "value": "Please input the account"
+    },
+    {
+      "name": "please_input_password",
+      "value": "Please input the password"
+    },
+    {
+      "name": "open_my_love",
+      "value": "Open my favorite"
+    },
+    {
+      "name": "open_history_record",
+      "value": "Open history"
+    },
+    {
+      "name": "open_message",
+      "value": "Open message"
+    },
+    {
+      "name": "open_shopping_cart",
+      "value": "Open shopping cart"
+    },
+    {
+      "name": "open_my_goal",
+      "value": "Open my goal"
+    },
+    {
+      "name": "open_group",
+      "value": "Open group"
+    },
+    {
+      "name": "open_favorites",
+      "value": "Open favorites"
+    },
+    {
+      "name": "open_recycle_bin",
+      "value": "Open Recycle Bin"
+    },
+    {
+      "name": "open_rankings",
+      "value": "Open rankings"
+    },
+    {
+      "name": "open_new",
+      "value": "Open new product debut"
+    },
+    {
+      "name": "open_brand",
+      "value": "Open big name flash"
+    },
+    {
+      "name": "open_found",
+      "value": "Open find good things"
+    },
+    {
+      "name": "open_news",
+      "value": "Push is on"
+    },
+    {
+      "name": "close_news",
+      "value": "Push is off"
+    },
+    {
+      "name": "open_data",
+      "value": "Open data management"
+    },
+    {
+      "name": "open_menu",
+      "value": "Open menu settings"
+    },
+    {
+      "name": "open_about",
+      "value": "Open about"
+    },
+    {
+      "name": "clear_storage",
+      "value": "Clear cache succeeded"
+    },
+    {
+      "name": "check_privacy",
+      "value": "Check privacy agreement"
+    },
+    {
+      "name": "input_empty_tips",
+      "value": "The input cannot be empty."
+    },
+    {
+      "name": "message_login_prompt",
+      "value": "Incorrect user name or password. Please try again."
+    },
+    {
+      "name": "message_user_name",
+      "value": "Please enter a user name"
+    },
+    {
+      "name": "message_password_prompt",
+      "value": "The passwords are different. Please try again."
+    },
+    {
+      "name": "message_application_prompt",
+      "value": "Please restart the application registration."
+    },
+    {
+      "name": "register_page",
+      "value": "register page"
+    },
+    {
+      "name": "register_name",
+      "value": "register name"
+    },
+    {
+      "name": "register_password",
+      "value": "register password"
+    },
+    {
+      "name": "register_confirm_password",
+      "value": "register confirm password"
+    },
+    {
+      "name": "register_face_checkbox",
+      "value": "Facial recognition login"
+    },
+    {
+      "name": "register_fingerprint_checkbox",
+      "value": "Fingerprint identification login"
+    },
+    {
+      "name": "register_button",
+      "value": "register"
+    },
+    {
+      "name": "main_tab_home",
+      "value": "Home"
+    },
+    {
+      "name": "home_title",
+      "value": "index"
+    },
+    {
+      "name": "main_tab_mine",
+      "value": "Mine"
+    },
+    {
+      "name": "mine_title",
+      "value": "Mine"
+    },
+    {
+      "name": "my_favorite",
+      "value": "My Favorite"
+    },
+    {
+      "name": "main_top",
+      "value": "Rankings"
+    },
+    {
+      "name": "main_text_top",
+      "value": "Xiamen Station, we'll see you."
+    },
+    {
+      "name": "main_new",
+      "value": "New product debut"
+    },
+    {
+      "name": "main_brand",
+      "value": "Big name flash"
+    },
+    {
+      "name": "main_found",
+      "value": "Find good things"
+    },
+    {
+      "name": "main_text_new",
+      "value": "Xiamen Station, we'll see you."
+    },
+    {
+      "name": "main_text_found",
+      "value": "Xiamen Station, we'll see you."
+    },
+    {
+      "name": "main_text_brand",
+      "value": "More Big Names"
+    },
+    {
+      "name": "setting_list_news",
+      "value": "Push notifications"
+    },
+    {
+      "name": "setting_list_data",
+      "value": "Data management"
+    },
+    {
+      "name": "setting_list_menu",
+      "value": "Menu settings"
+    },
+    {
+      "name": "setting_list_about",
+      "value": "Clear cache"
+    },
+    {
+      "name": "setting_list_storage",
+      "value": "Clear the cache"
+    },
+    {
+      "name": "setting_list_privacy",
+      "value": "Privacy agreement"
+    },
+    {
+      "name": "setting_toggle",
+      "value": "switch"
+    },
+    {
+      "name": "setting_account_name",
+      "value": "Mr. Lee"
+    },
+    {
+      "name": "setting_account_email",
+      "value": "2000000@shenhua.cc"
+    },
+    {
+      "name": "setting_button",
+      "value": "Logout"
+    },
+    {
+      "name": "access_biometric_reason",
+      "value": "Used for login verification using biometric recognition capabilities."
+    },
+    {
+      "name": "privacy_window_reason",
+      "value": "Used to prohibit screenshots in login page scenarios."
     }
   ]
 }

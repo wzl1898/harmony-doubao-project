@@ -18,7 +18,11 @@ export default struct Toolbar {
           .height(22)
           .margin({ left: 15 })
           .onClick(() => {
-            router.back()
+            // router.back()
+            router.pushUrl({
+              url: 'pages/Index',
+              params: {}
+            })
           })
 
         Text(this.title)

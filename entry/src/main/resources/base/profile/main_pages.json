@@ -1,5 +1,6 @@
 {
   "src": [
+    "pages/LoginPage",
     "pages/Index",
     "pages/search/SearchPage",
     "pages/chat/ChatPage",
