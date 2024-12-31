@@ -20,26 +20,7 @@ export default struct Home {
   aboutToAppear(): void {
     //TODO: go through all ChatMsg From database and create all ChatWindow(ChatItemData)
   }
-  // @State chatList: ChatItemData[] = [
-  //   {
-  //     headSrc: $r("app.media.ic_user_head2"),
-  //     nickname: "老婆",
-  //     content: "今晚给你做了好吃的，早点下班哦😊",
-  //     time: "17:21"
-  //   },
-  //   {
-  //     headSrc: $r("app.media.ic_user_head3"),
-  //     nickname: "游戏好友",
-  //     content: "我今天又拿了五杀，牛逼不？",
-  //     time: "15:38"
-  //   },
-  //   {
-  //     headSrc: $r("app.media.ic_user_head4"),
-  //     nickname: "同事小李",
-  //     content: "领导，报给写好了，请过目",
-  //     time: "14:12"
-  //   }
-  // ]
+
   @State recodeList: Recording[] = [
     {
       id: 1,
@@ -80,12 +61,6 @@ export default struct Home {
       .width("100%")
       .height("100%")
 
-      // Button('Ok', { type: ButtonType.Normal, stateEffect: true })
-      //   .height('20%')
-      //   .width('40%')
-      //   .onClick(() => {
-      //     // this.test_api("hello?")
-      //   })
     }
     .width("100%")
     .height("100%")
