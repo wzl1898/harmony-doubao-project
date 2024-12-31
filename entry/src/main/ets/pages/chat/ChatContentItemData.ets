@@ -1,9 +1,9 @@
 export interface ChatContentItemData {
   name?: string
-  voicePath?: string
-  headSrc?: Resource
+  voicePath?: string //
+  headSrc?: Resource //
   msg?: string
-  img?: Resource
+  img?: Resource //
   msgType?: number
   self?: Boolean
 }

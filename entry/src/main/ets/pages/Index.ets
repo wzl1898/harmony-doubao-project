@@ -14,6 +14,8 @@ struct Index {
   private tabTextColors: string[] = ["#040404", "#57be6a"]
   private tabTipCounts: number[] = [0]
 
+  @State userId: number = 0
+
   build() {
     Column() {
       Tabs({ barPosition: BarPosition.End, controller: this.tabController }) {
