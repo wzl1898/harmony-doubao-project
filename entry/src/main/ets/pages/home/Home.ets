@@ -1,9 +1,5 @@
 import router from '@ohos.router'
-import ListChatItem, { ChatItemData } from '../../component/ListChatItem'
 import WechatToolbar from '../../component/WechatToolbar'
-import AliYunHttpUtils from '../../utils/AliYunHttpUtils'
-import http from '@ohos.net.http';
-import hilog from '@ohos.hilog';
 
 import { relationalStore, ValuesBucket } from '@kit.ArkData'
 import ListRecordItem from '../../component/ListRecordList'
@@ -59,17 +55,6 @@ export default struct Home {
       WechatToolbar({ title: "豆包" })
 
       List() {
-        // ForEach(this.chatList, (item: ChatItemData, index: number) => {
-        //   ListItem() {
-        //     ListChatItem({ data: item })
-        //   }
-        //   .onClick(() => { //TODO: go to the specific chat page (pass some params to the chatpage we are going to)
-        //     router.pushUrl({
-        //       url: 'pages/chat/ChatPage',
-        //       params: { name: item.nickname }
-        //     })
-        //   })
-        // })
         ForEach(this.recodeList, (item: Recording, index: number) => {
           ListItem() {
             ListRecordItem({ data: item })
@@ -77,7 +62,7 @@ export default struct Home {
           .onClick(() => {
             router.pushUrl({
               url: 'pages/chat/ChatPage',
-              params: { name: item.nickname }
+              params: { c_id: item.id }
             })
           })
         })
