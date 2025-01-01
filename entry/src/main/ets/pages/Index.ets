@@ -74,12 +74,27 @@ struct Index {
     AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
     return id
   }
-  
+
+  async deleteChat(id:number) {
+    // 获取操作数据库对象
+    const store = await this.getStoreInstance()
+    const predicates = new relationalStore.RdbPredicates(this.tableName)
+    predicates.equalTo('id', id)
+    const affectedRows = await store.delete(predicates)
+    if (affectedRows > 0) AlertDialog.show({ message: '删除成功' })
+  }
+
   onPageShow(): void {
     let record  = router.getParams() as Record<string,number>
     if (record) {
       this.u_id = record['u_id']
       //AlertDialog.show({ message: 'index userid: ' + this.u_id +',  name:'+ this.u_name})
+    }
+    if (this.c_id != 0) {
+      if (this.c_name == '' && this.c_des == '') this.deleteChat(this.c_id)
+      else {
+
+      }
     }
   }
 
@@ -130,7 +145,7 @@ struct Index {
           // 添加一条数据
           const id = await store.insert(this.tableName, {
             id: null, // 新增时设置 id 为空值 null，用于自增 id
-            u_id: 1,
+            u_id: this.u_id,
             name: '新会话',
             des: '',
             time: Date.now()
@@ -138,7 +153,11 @@ struct Index {
           AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
           router.pushUrl({
             url: 'pages/chat/ChatPage',
-            params: {c_id:id}
+            params: {
+              c_id:id,
+              u_id: this.u_id,
+              u_name: this.u_name
+            }
           })
         }
         this.currentIndex = index
@@ -215,7 +234,9 @@ struct Index {
                 router.pushUrl({
                   url: url_str,
                   params: {
-                    c_id:id
+                    c_id:id,
+                    u_id: this.u_id,
+                    u_name: this.u_name
                   }
                 })
               }
@@ -251,7 +272,9 @@ struct Index {
                 router.pushUrl({
                   url: url_str,
                   params: {
-                    c_id:id
+                    c_id:id,
+                    u_id: this.u_id,
+                    u_name: this.u_name
                   }
                 })
               }

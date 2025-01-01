@@ -129,6 +129,9 @@ export default struct ChatPage {
   // 操作数据库的管理对象
   store: relationalStore.RdbStore | null = null
 
+  @State c_name:string = ''
+  @State c_des:string = ''
+
   async getStoreInstance() {
     // 如果已经存在，直接返回
     if (this.store) {
@@ -280,8 +283,11 @@ export default struct ChatPage {
         self: (element.self == 1),
         msg: element.msg,
       })
-    });
+    },
+    );
 
+    this.c_name=(this.dataList.length > 0 ) ? this.dataList[0].msg:''
+    this.c_des= (this.dataList.length > 0 ) ? this.dataList[1].msg:''
     this.scroller.scrollToIndex(this.dataList.length)
   }
 
@@ -353,8 +359,8 @@ export default struct ChatPage {
         u_id: this.u_id,
         c_id: this.c_id,
         u_name: this.u_name,
-        c_name: (this.chatList.length > 0 ) ? this.chatList[0].content:'',
-        c_des: (this.chatList.length > 0 ) ? this.chatList[1].content:''
+        c_name: $c_name,
+        c_des: $c_des
       })
       List({ space: 20, initialIndex: this.dataList.length, scroller: this.scroller }) {
         ForEach(this.dataList, (item: ChatContentItemData) => {
@@ -520,6 +526,9 @@ export default struct ChatPage {
       msg: this.chatText,
     })
     this.scroller.scrollToIndex(this.dataList.length)
+    if (this.dataList.length == 1) {
+      this.c_name = this.chatText
+    }
     this.test_api(this.chatText)
     this.chatText = ""
   }
@@ -588,6 +597,10 @@ export default struct ChatPage {
           self: false,
           msg: resp.output.text,
         })
+
+        if (this.dataList.length == 2) {
+          this.c_des = resp.output.text
+        }
 
         this.scroller.scrollToIndex(this.dataList.length)
       }

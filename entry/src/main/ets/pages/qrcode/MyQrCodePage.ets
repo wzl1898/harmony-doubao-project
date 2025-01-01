@@ -8,7 +8,6 @@ struct MyQrCodePage {
   build() {
 
     Column() {
-      Toolbar({ title: "" })
       Row() {
         Image($r('app.media.ic_user_head1'))
           .width(55)

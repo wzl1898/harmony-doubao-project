@@ -13,8 +13,8 @@ export default struct Toolbar {
   u_id:number = 0
   u_name:string = ''
   c_id:number = 0
-  c_name:string = ''
-  c_des:string = ''
+  @Link c_name:string
+  @Link c_des:string
 
   build() {
     Column() {
@@ -25,6 +25,7 @@ export default struct Toolbar {
           .margin({ left: 15 })
           .onClick(() => {
             //AlertDialog.show({ message: 'tool bar userid: ' + this.u_id +',  name:'+ this.u_name})
+            AlertDialog.show({ message: 'tool bar c_name: ' + this.c_name +',  c_des:'+ this.c_des})
 
             // router.back()
             router.pushUrl({
