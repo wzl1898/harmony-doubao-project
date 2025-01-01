@@ -116,9 +116,11 @@ export default struct Home {
               }
             })
           })
+
         })
         ListItem() {
           Divider().color('#0000').strokeWidth(0)
+
         }
       }
       .divider({

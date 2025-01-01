@@ -36,6 +36,72 @@ export default struct Setting {
   u_name: string = ''
   u_id: number = 0
 
+
+
+
+  // build() {
+  //   Row() {
+  //     Column({ space: CommonConstants.COMMON_SPACE }) {
+  //         // Row(
+  //         //   // mainAxisAlignment: 1, // 让Row内的元素在主轴（水平方向）居中
+  //         // ) {
+  //         //TODO: load current username
+  //         Row(){
+  //           Image($r('app.media.ic_user_head1'))
+  //             .width($r('app.float.setting_account_size'))
+  //             .height($r('app.float.setting_account_size'))
+  //             .borderRadius("10vp")
+  //             .align(Alignment.Center)
+  //         }
+  //         Row(){
+  //           Text(this.u_name)
+  //             .fontSize($r('app.float.setting_account_fontSize'))
+  //           // .alignSelf(ItemAlign.Center)
+  //         }
+  //
+  //         // Column() {
+  //         //
+  //         //   // Text($r('app.string.setting_account_email'))
+  //         //   //.fontSize($r('app.float.little_text_size'))
+  //         //   //.margin({ top: $r('app.float.setting_name_margin')})
+  //         // }
+  //         // .alignItems(HorizontalAlign.Start)
+  //         // .margin({ left: $r('app.float.setting_account_margin')})
+  //       }
+  //       .margin({ top: $r('app.float.setting_account_margin')})
+  //         // .alignItems(VerticalAlign.Center)
+  //         .width(CommonConstants.FULL_PARENT)
+  //         .height($r('app.float.setting_account_height'))
+  //         .backgroundColor(Color.White)
+  //         .padding({ left: $r('app.float.setting_account_padding') })
+  //         .borderRadius($r('app.float.setting_account_radius'))
+  //         .align(Alignment.Top)
+  //
+  //
+  //       Blank()
+  //
+  //       Button($r('app.string.setting_button'), { type: ButtonType.Capsule })
+  //         .width(CommonConstants.BUTTON_WIDTH)
+  //         .height($r('app.float.login_button_height'))
+  //         .fontSize($r('app.float.normal_text_size'))
+  //         .fontColor($r('app.color.setting_button_font'))
+  //         .fontWeight(FontWeight.Medium)
+  //         .backgroundColor($r('app.color.setting_button_background'))
+  //         .margin({ bottom: $r('app.float.setting_button_bottom')})
+  //         .onClick(() => {
+  //           router.replaceUrl({
+  //             url: CommonConstants.ROUTER_LOGIN_URL
+  //           })
+  //         })
+  //         .align(Alignment.Bottom)
+  //     }
+  //     .height(CommonConstants.FULL_PARENT)
+  //   }
+  // // }
+
+
+
+
   build() {
     Scroll() {
       Column({ space: CommonConstants.COMMON_SPACE }) {
@@ -44,6 +110,7 @@ export default struct Setting {
           Image($r('app.media.ic_user_head1'))
             .width($r('app.float.setting_account_size'))
             .height($r('app.float.setting_account_size'))
+            .borderRadius("10vp")
           Column() {
             Text(this.u_name)
               .fontSize($r('app.float.setting_account_fontSize'))
