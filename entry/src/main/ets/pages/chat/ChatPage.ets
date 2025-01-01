@@ -244,6 +244,8 @@ export default struct ChatPage {
   }
 
   @State c_id: number = (router.getParams() as Record<string,number>) ['c_id'];
+  @State userId: number = (router.getParams() as Record<string,number>) ['userId'];
+  @State userName: number = (router.getParams() as Record<string,string>) ['userName'];
   async aboutToAppear() {
     // this.name = (router.getParams() as ChatPageParam).name
     this.name = "豆包"
@@ -257,7 +259,7 @@ export default struct ChatPage {
     const predicates = new relationalStore.RdbPredicates(this.tableName)
     // predicates.orderByDesc('id') // 倒序(由大到小，常用于排序)
     predicates.orderByAsc('id')   // 正序(小到大，常用于排序)
-    // predicates.equalTo('id', 1)    // 等于(常用于详情页)
+    predicates.equalTo('c_id', this.c_id)    // 等于(常用于详情页)
     // predicates.in('id', [1, 3, 5]) // 查找多项(常用批量删除)
     // predicates.like('title', '%哈%') //  模糊匹配(常用于搜索)
     // 还有很多...
@@ -353,7 +355,13 @@ export default struct ChatPage {
 
   build() {
     Column() {
-      Toolbar({ title: this.name })
+      Toolbar({ title: this.name,
+        userId: this.userId,
+        c_id: this.c_id,
+        userName: this.username,
+        name: (this.chatList.length > 0 ) ? this.chatList[0].content:null,
+        des: (this.chatList.length > 0 ) ? this.chatList[1].content:null
+      })
       List({ space: 20, initialIndex: this.dataList.length, scroller: this.scroller }) {
         ForEach(this.dataList, (item: ChatContentItemData) => {
           ListItem() {
@@ -505,7 +513,7 @@ export default struct ChatPage {
     // 添加一条数据
     const id = await store.insert(this.tableName, {
       id: null, // 新增时设置 id 为空值 null，用于自增 id
-      c_id: 1,
+      c_id: this.c_id,
       msg: this.chatText,
       self: 1
     } as ChatContent)
@@ -574,7 +582,7 @@ export default struct ChatPage {
         // 添加一条数据
         const id = await store.insert(this.tableName, {
           id: null, // 新增时设置 id 为空值 null，用于自增 id
-          c_id: 1,
+          c_id: this.c_id,
           msg: resp.output.text,
           self: 0
         } as ChatContent)

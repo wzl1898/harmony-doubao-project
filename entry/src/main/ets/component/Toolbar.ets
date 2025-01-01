@@ -10,6 +10,12 @@ export default struct Toolbar {
   private subTitle: string = "更多"
   private subIconSrc: string | PixelMap | Resource = $r("app.media.ic_toolbar_more")
 
+  userId:number = 0
+  userName:string = ''
+  c_id:number = 0
+  name:string = ''
+  des:string = ''
+
   build() {
     Column() {
       Row() {
