@@ -105,12 +105,14 @@ export default struct Home {
             ListRecordItem({ data: item })
           }
           .onClick(() => {
+            //AlertDialog.show({ message: 'home userid: ' + this.u_id +',  name:'+ this.u_name})
+
             router.pushUrl({
               url: 'pages/chat/ChatPage',
               params: {
                 c_id: item.id,
-                userId: this.u_id,
-                userName: this.u_name
+                u_id: this.u_id,
+                u_name: this.u_name
               }
             })
           })

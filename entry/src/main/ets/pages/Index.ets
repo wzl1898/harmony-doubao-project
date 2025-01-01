@@ -72,13 +72,14 @@ struct Index {
       time: Date.now()
     } as Chat)
     AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
+    return id
   }
   
   onPageShow(): void {
     let record  = router.getParams() as Record<string,number>
     if (record) {
       this.u_id = record['u_id']
-      AlertDialog.show({ message: 'userid: ' + this.u_id })
+      //AlertDialog.show({ message: 'index userid: ' + this.u_id +',  name:'+ this.u_name})
     }
   }
 
@@ -122,11 +123,22 @@ struct Index {
       .vertical(false)
       .layoutWeight(1)
       .padding({ bottom: WindowManager.navBarHeight })
-      .onChange((index: number) => {
+      .onChange(async (index: number) => {
         if (index == 1) {
+          // 获取操作数据库的对象
+          const store = await this.getStoreInstance()
+          // 添加一条数据
+          const id = await store.insert(this.tableName, {
+            id: null, // 新增时设置 id 为空值 null，用于自增 id
+            u_id: 1,
+            name: '新会话',
+            des: '',
+            time: Date.now()
+          } as Chat)
+          AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
           router.pushUrl({
             url: 'pages/chat/ChatPage',
-            params: {}
+            params: {c_id:id}
           })
         }
         this.currentIndex = index
@@ -180,40 +192,67 @@ struct Index {
               //TODO: create and save a init ChatContentItemData, and pushurl to the chatpage
               let url_str = ''
               if (this.currentIndex == 1){
-                //this.addNewChat()
+                //AlertDialog.show({ message: 'text 1' })
                 url_str = 'pages/chat/ChatPage'
-                AlertDialog.show({ message: 'icon 1' })
               }else if (this.currentIndex == 0){
-                AlertDialog.show({ message: 'icon 2' })
+                //AlertDialog.show({ message: 'text 2' })
                 url_str = 'pages/Index'
               }else if (this.currentIndex == 2){
-                AlertDialog.show({ message: 'icon 3' })
+                //AlertDialog.show({ message: 'text 3' })
                 url_str = 'pages/Mine'
               }
-
+              if (this.currentIndex == 1) {
+                const store = await this.getStoreInstance()
+                // 添加一条数据
+                const id = await store.insert(this.tableName, {
+                  id: null, // 新增时设置 id 为空值 null，用于自增 id
+                  u_id: this.u_id,
+                  name: '新会话',
+                  des: '',
+                  time: Date.now()
+                } as Chat)
+                AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
+                router.pushUrl({
+                  url: url_str,
+                  params: {
+                    c_id:id
+                  }
+                })
+              }
             })
           // 文本
           Text(this.tabTitles[index])
             .fontColor("#ff2922c1")
             .fontSize(10)
-            .onClick(()=>{
+            .onClick(async ()=>{
               //TODO: create and save a init ChatContentItemData, and pushurl to the chatpage
               let url_str = ''
               if (this.currentIndex == 1){
-                AlertDialog.show({ message: 'text 1' })
+                //AlertDialog.show({ message: 'text 1' })
                 url_str = 'pages/chat/ChatPage'
               }else if (this.currentIndex == 0){
-                AlertDialog.show({ message: 'text 2' })
+                //AlertDialog.show({ message: 'text 2' })
                 url_str = 'pages/Index'
               }else if (this.currentIndex == 2){
-                AlertDialog.show({ message: 'text 3' })
+                //AlertDialog.show({ message: 'text 3' })
                 url_str = 'pages/Mine'
               }
               if (this.currentIndex == 1) {
-                this.addNewChat()
+                const store = await this.getStoreInstance()
+                // 添加一条数据
+                const id = await store.insert(this.tableName, {
+                  id: null, // 新增时设置 id 为空值 null，用于自增 id
+                  u_id: this.u_id,
+                  name: '新会话',
+                  des: '',
+                  time: Date.now()
+                } as Chat)
+                AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
                 router.pushUrl({
                   url: url_str,
-                  params: {}
+                  params: {
+                    c_id:id
+                  }
                 })
               }
             })
