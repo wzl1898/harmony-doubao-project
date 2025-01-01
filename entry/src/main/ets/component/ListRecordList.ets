@@ -1,13 +1,13 @@
 @Preview
 @Component
 export default struct ListRecordItem {
-  data: Recording = {
+  data: Chat = {
     id: 0,
     u_id: 0,
     //m_id: number,
     name: "",
     des: "",
-    time: "",
+    time: 0,
     //url: string,
   }
 
@@ -33,7 +33,7 @@ export default struct ListRecordItem {
       .margin({ right: 30 })
       .alignItems(HorizontalAlign.Start)
 
-      Text(this.data.time)
+      Text(this.data.time?.toString())
         .fontColor(Color.Gray)
         .fontSize(14)
         .alignSelf(ItemAlign.Start)
@@ -45,12 +45,12 @@ export default struct ListRecordItem {
     .padding({ left: 15, right: 15 })
   }
 }
-interface Recording {
+interface Chat {
   id?: number | null
   u_id?: number
   //m_id?: number
   name?: string
   des?: string
-  time?: string
+  time?: number
   //url?: Resource
 }

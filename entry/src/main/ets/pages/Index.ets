@@ -5,6 +5,18 @@ import discovery from './discovery/Discovery'
 import Setting from './mine/Setting'
 import WindowManager from '../utils/WindowManager'
 
+import { relationalStore, ValuesBucket } from '@kit.ArkData'
+
+interface Chat extends ValuesBucket {
+  id: number | null // 新增时设置 id 为空值 null，用于自增 id
+  u_id: number
+  //m_id: number
+  name: string
+  des: string
+  time: number
+  //url: Resource
+}
+
 @Entry
 @Component
 struct Index {
@@ -15,6 +27,47 @@ struct Index {
   private tabTipCounts: number[] = [0]
 
   @State userId: number = 0
+
+  tableName: string = 'chat'
+  sqlCreate: string = `CREATE TABLE IF NOT EXISTS ${this.tableName} (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        u_id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        des TEXT,
+        time INTEGER NOT NULL
+      )`
+  // 操作数据库的管理对象
+  store: relationalStore.RdbStore | null = null
+
+  async getStoreInstance() {
+    // 如果已经存在，直接返回
+    if (this.store) {
+      return this.store
+    }
+    // 获取操作数据库的管理对象(如果数据库文件不存在，会自动创建数据库文件)
+    this.store = await relationalStore.getRdbStore(getContext(), {
+      name: 'final.db', // 数据库文件名
+      securityLevel: relationalStore.SecurityLevel.S1, // 数据库安全级别
+    })
+    // 执行创建表的语句 execute 执行
+    this.store.executeSql(this.sqlCreate)
+    // 返回 store 对象
+    return this.store
+  }
+
+  async addNewChat() {
+    // 获取操作数据库的对象
+    const store = await this.getStoreInstance()
+    // 添加一条数据
+    const id = await store.insert(this.tableName, {
+      id: null, // 新增时设置 id 为空值 null，用于自增 id
+      u_id: 1,
+      name: '新会话',
+      des: '',
+      time: Date.now()
+    } as Chat)
+    AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
+  }
 
   build() {
     Column() {
@@ -71,7 +124,6 @@ struct Index {
     //     })
     }
 
-
   @Builder
   createTabMenu(index: number) {
 
@@ -105,10 +157,11 @@ struct Index {
             .height(26)
             .objectFit(ImageFit.Fill)
             .margin({ bottom: 3 })
-            .onClick(()=>{
+            .onClick(async ()=>{
               //TODO: create and save a init ChatContentItemData, and pushurl to the chatpage
               let url_str = ''
               if (this.currentIndex == 1){
+                //this.addNewChat()
                 url_str = 'pages/chat/ChatPage'
               }else if (this.currentIndex == 0){
                 url_str = 'pages/Index'
@@ -125,6 +178,7 @@ struct Index {
               //TODO: create and save a init ChatContentItemData, and pushurl to the chatpage
               let url_str = ''
               if (this.currentIndex == 1){
+                //this.addNewChat()
                 url_str = 'pages/chat/ChatPage'
               }else if (this.currentIndex == 0){
                 url_str = 'pages/Index'

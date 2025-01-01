@@ -289,8 +289,6 @@ export default struct ChatPage {
     this.scroller.scrollToIndex(this.dataList.length)
   }
 
-
-
   onBackPress() {
     return this.keyboardHeight > 0
   }
