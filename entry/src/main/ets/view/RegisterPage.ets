@@ -11,6 +11,14 @@ import { util } from '@kit.ArkTS';
 import PreferenceModel from '../model/PreferenceModel';
 import UserAuthModel from '../model/UserAuthModel';
 
+import { relationalStore, ValuesBucket } from '@kit.ArkData'
+
+interface UserItem extends ValuesBucket {
+  id: number | null // 新增时设置 id 为空值 null，用于自增 id
+  name: string
+  psw: string
+}
+
 @Extend(TextInput)
 function inputStyle() {
   .placeholderColor($r('app.color.placeholder_color'))
@@ -42,6 +50,32 @@ export struct RegisterPage {
   @Consume('isFingerprint') isFingerprint: boolean;
   private keyAlias: string = CommonConstants.LOGIN_KEYS;
 
+  // 用户表
+  tableName: string = 'user'
+  sqlCreate: string = `CREATE TABLE IF NOT EXISTS ${this.tableName} (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT UNIQUE,
+        psw TEXT NOT NULL
+      )`
+  // 操作数据库的管理对象
+  store: relationalStore.RdbStore | null = null
+
+  async getStoreInstance() {
+    // 如果已经存在，直接返回
+    if (this.store) {
+      return this.store
+    }
+    // 获取操作数据库的管理对象(如果数据库文件不存在，会自动创建数据库文件)
+    this.store = await relationalStore.getRdbStore(getContext(), {
+      name: 'final.db', // 数据库文件名
+      securityLevel: relationalStore.SecurityLevel.S1, // 数据库安全级别
+    })
+    // 执行创建表的语句 execute 执行
+    this.store.executeSql(this.sqlCreate)
+    // 返回 store 对象
+    return this.store
+  }
+
   /**
    * Check whether the registration button can be clicked.
    */
@@ -64,6 +98,27 @@ export struct RegisterPage {
       PromptUtil.promptMessage($r('app.string.message_password_prompt'), CommonConstants.PROMPT_DURATION);
       return;
     }
+
+    // 获取数据库对象
+    const store = await this.getStoreInstance()
+
+    // 判断用户名不重复
+    const predicates = new relationalStore.RdbPredicates(this.tableName)
+    predicates.equalTo('name', this.name)
+    const resultSet = await store.query(predicates)
+    if (resultSet.goToNextRow()) {
+      AlertDialog.show({ message: '用户名重复'})
+      return
+    }
+
+    // 新建用户
+    const id = await store.insert(this.tableName, {
+      id: null, // 新增时设置 id 为空值 null，用于自增 id
+      name: this.name,
+      psw: this.passWord
+    } as UserItem)
+    AlertDialog.show({ message: '用户新建成功'})
+
     let isExist = false;
     await HuksModel.isKeyItemExist(this.keyAlias)
       .then((value: boolean) => {

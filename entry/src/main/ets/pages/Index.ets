@@ -27,6 +27,7 @@ struct Index {
   private tabTipCounts: number[] = [0]
 
   @State userId: number = 0
+  @State userName: string = ''
 
   tableName: string = 'chat'
   sqlCreate: string = `CREATE TABLE IF NOT EXISTS ${this.tableName} (
@@ -68,13 +69,22 @@ struct Index {
     } as Chat)
     AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
   }
+  
+  onPageShow(): void {
+    let record  = router.getParams() as Record<string,number>
+    if (record) {
+      this.userId = record['u_id']
+      this.userName = (router.getParams() as Record<string, string>)['u_name']
+      AlertDialog.show({ message: 'userid: ' + this.userId })
+    }
+  }
 
   build() {
     Column() {
       Tabs({ barPosition: BarPosition.End, controller: this.tabController }) {
         // 微信（首页）
         TabContent() {
-          home()
+          home({ userId: this.userId})
         }
         .tabBar(this.createTabMenu(0))
 
@@ -92,7 +102,10 @@ struct Index {
 
         // 我的
         TabContent() {
-          Setting()
+          Setting({
+            userId: this.userId,
+            userName: this.userName
+          })
         }
         .tabBar(this.createTabMenu(2))
       }
@@ -178,7 +191,6 @@ struct Index {
               //TODO: create and save a init ChatContentItemData, and pushurl to the chatpage
               let url_str = ''
               if (this.currentIndex == 1){
-                //this.addNewChat()
                 url_str = 'pages/chat/ChatPage'
               }else if (this.currentIndex == 0){
                 url_str = 'pages/Index'
@@ -186,6 +198,7 @@ struct Index {
                 url_str = 'pages/Mine'
               }
               if (this.currentIndex == 1) {
+                //this.addNewChat()
                 router.pushUrl({
                   url: url_str,
                   params: {}

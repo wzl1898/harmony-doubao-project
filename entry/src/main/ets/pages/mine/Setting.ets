@@ -33,6 +33,8 @@ export default struct Setting {
   //     right: $r('app.float.setting_cell_right')
   //   })
   // }
+  userName: string = ''
+  userId: number = 0
 
   build() {
     Scroll() {
@@ -43,7 +45,7 @@ export default struct Setting {
             .width($r('app.float.setting_account_size'))
             .height($r('app.float.setting_account_size'))
           Column() {
-            Text($r('app.string.setting_account_name'))
+            Text(this.userName)
               .fontSize($r('app.float.setting_account_fontSize'))
             // Text($r('app.string.setting_account_email'))
             //   .fontSize($r('app.float.little_text_size'))

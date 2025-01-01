@@ -12,6 +12,14 @@ import { BusinessError } from '@kit.BasicServicesKit';
 import UserAuthModel from '../model/UserAuthModel';
 import Logger from '../common/utils/Logger';
 import { RegisterPage } from '../view/RegisterPage';
+import { relationalStore, ValuesBucket } from '@kit.ArkData'
+
+interface UserItem extends ValuesBucket {
+  id: number | null // 新增时设置 id 为空值 null，用于自增 id
+  name: string
+  psw: string
+}
+
 
 @Extend(TextInput)
 function inputStyle() {
@@ -52,6 +60,32 @@ struct LoginPage {
   @Provide('pageInfos') pageInfos: NavPathStack = new NavPathStack();
   @StorageLink('userLogin') userLogin: boolean = false;
   private keyAlias: string = CommonConstants.LOGIN_KEYS;
+  // 用户表
+  tableName: string = 'user'
+  sqlCreate: string = `CREATE TABLE IF NOT EXISTS ${this.tableName} (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT UNIQUE,
+        psw TEXT NOT NULL
+      )`
+  // 操作数据库的管理对象
+  store: relationalStore.RdbStore | null = null
+
+  async getStoreInstance() {
+    // 如果已经存在，直接返回
+    if (this.store) {
+      return this.store
+    }
+    // 获取操作数据库的管理对象(如果数据库文件不存在，会自动创建数据库文件)
+    this.store = await relationalStore.getRdbStore(getContext(), {
+      name: 'final.db', // 数据库文件名
+      securityLevel: relationalStore.SecurityLevel.S1, // 数据库安全级别
+    })
+    // 执行创建表的语句 execute 执行
+    this.store.executeSql(this.sqlCreate)
+    // 返回 store 对象
+    return this.store
+  }
+
 
   onPageShow() {
     window.getLastWindow(getContext(this)).then((windowStage: window.Window) => {
@@ -94,6 +128,27 @@ struct LoginPage {
     }
     let userName = PreferenceModel.getPreference(CommonConstants.USER_NAME, '') as string;
 
+    // 获取数据库对象
+    const store = await this.getStoreInstance()
+
+    // 判断用户是否存在
+    const predicates = new relationalStore.RdbPredicates(this.tableName)
+    predicates.equalTo('name', this.account)
+    const resultSet = await store.query(predicates)
+    const user: UserItem = {
+      id: null,
+      name: '',
+      psw: ''
+    }
+    if (!resultSet.goToNextRow()) {
+      AlertDialog.show({ message: '用户不存在'})
+      return
+    } else {
+      user.id = resultSet.getLong(resultSet.getColumnIndex('id'))
+      user.name = resultSet.getString(resultSet.getColumnIndex('name'))
+      user.psw = resultSet.getString(resultSet.getColumnIndex('psw'))
+    }
+
     Logger.info('username' + userName)
     if (this.account !== userName) {
       PromptUtil.promptMessage($r('app.string.message_login_prompt'), CommonConstants.PROMPT_DURATION);
@@ -109,7 +164,11 @@ struct LoginPage {
       if (cryptoData && cryptoData === this.password) {
         this.userLogin = true;
         router.replaceUrl({
-          url: 'pages/Index'
+          url: 'pages/Index',
+          params: {
+            u_id: user.id,
+            u_name: user.name
+          }
         });
       } else {
         PromptUtil.promptMessage($r('app.string.message_login_prompt'), CommonConstants.PROMPT_DURATION);

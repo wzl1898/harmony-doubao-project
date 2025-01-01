@@ -17,6 +17,7 @@ interface Chat extends ValuesBucket {
 @Preview
 @Component
 export default struct Home {
+  userId :number = 0
   tableName: string = 'chat'
   sqlCreate: string = `CREATE TABLE IF NOT EXISTS ${this.tableName} (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
