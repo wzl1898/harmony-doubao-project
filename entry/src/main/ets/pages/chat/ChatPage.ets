@@ -239,6 +239,8 @@ export default struct ChatPage {
   @State u_id: number = (router.getParams() as Record<string,number>) ['u_id'];
   @State u_name: string = (router.getParams() as Record<string,string>) ['u_name'];
   async aboutToAppear() {
+    //AlertDialog.show({ message: 'chat page userid: ' + this.u_id +',  name:'+ this.u_name})
+
     // this.name = (router.getParams() as ChatPageParam).name
     this.name = "豆包"
     await window.getLastWindow(getContext(this)).then(currentWindow => {

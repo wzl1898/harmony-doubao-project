@@ -24,6 +24,8 @@ export default struct Toolbar {
           .height(22)
           .margin({ left: 15 })
           .onClick(() => {
+            //AlertDialog.show({ message: 'tool bar userid: ' + this.u_id +',  name:'+ this.u_name})
+
             // router.back()
             router.pushUrl({
               url: 'pages/Index',
