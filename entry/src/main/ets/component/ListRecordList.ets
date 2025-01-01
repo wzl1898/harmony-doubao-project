@@ -29,6 +29,18 @@ export default struct ListRecordItem {
           .maxLines(1)
           .textOverflow({ overflow: TextOverflow.Ellipsis })
           .margin({ top: 7 })
+
+        Button("删除", { type: ButtonType.Capsule })
+          .width("20vp")
+          .height("20vp")
+          .fontSize($r('app.float.normal_text_size'))
+          .fontColor($r('app.color.setting_button_font'))
+          .fontWeight(FontWeight.Medium)
+          .backgroundColor($r('app.color.setting_button_background'))
+          .margin({ bottom: $r('app.float.setting_button_bottom')})
+          .onClick(() => {
+            //TODO: delete conversation
+          })
       }.layoutWeight(1)
       .margin({ right: 30 })
       .alignItems(HorizontalAlign.Start)

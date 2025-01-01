@@ -206,11 +206,11 @@ struct LoginPage {
             top: $r('app.float.logo_margin_top'),
             bottom: $r('app.float.logo_margin_bottom')
           })
-        Text('聊天助手')
+        Text('仿豆包AI聊天助手')
           .fontSize($r('app.float.title_text_size'))
           .fontWeight(FontWeight.Medium)
           .fontColor($r('app.color.title_text_color'))
-        Text($r('app.string.login_more'))
+        Text("")
           .fontSize($r('app.float.normal_text_size'))
           .fontColor($r('app.color.login_text_color'))
           .margin({
