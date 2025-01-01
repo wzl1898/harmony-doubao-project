@@ -84,7 +84,7 @@ struct Index {
     if (affectedRows > 0) AlertDialog.show({ message: '删除成功' })
   }
 
-  onPageShow(): void {
+  async onPageShow(): Promise<void> {
     let record  = router.getParams() as Record<string,number>
     if (record) {
       this.u_id = record['u_id']
@@ -93,7 +93,20 @@ struct Index {
     if (this.c_id != 0) {
       if (this.c_name == '' && this.c_des == '') this.deleteChat(this.c_id)
       else {
-
+        // 获取操作数据库对象
+        const store = await this.getStoreInstance()
+        // 谓词(条件)
+        const predicates = new relationalStore.RdbPredicates(this.tableName)
+        // 注意!!!：记得添加 predicates 限定条件，否者修改全部
+        predicates.equalTo('id', this.c_id)
+        // 待更新数据
+        const value = {
+          name: this.c_name,
+          des: this.c_des,
+          time: Date.now()
+        } as Chat
+        const affectedRows = await store.update(value, predicates)
+        if (affectedRows > 0) AlertDialog.show({ message: '修改成功' })
       }
     }
   }
