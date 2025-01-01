@@ -167,7 +167,10 @@ struct LoginPage {
           url: 'pages/Index',
           params: {
             u_id: user.id,
-            u_name: user.name
+            u_name: user.name,
+            c_id: 0,
+            c_des: '',
+            c_name: '',
           }
         });
       } else {

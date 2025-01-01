@@ -26,8 +26,12 @@ struct Index {
   private tabTextColors: string[] = ["#040404", "#57be6a"]
   private tabTipCounts: number[] = [0]
 
-  @State userId: number = 0
-  @State userName: string = ''
+  @State u_id: number = 0
+  u_name = (router.getParams() as Record<string, string>)['u_name']
+  c_id = (router.getParams() as Record<string, number>)['c_id']
+  c_name = (router.getParams() as Record<string, string>)['c_name']
+  c_des = (router.getParams() as Record<string, string>)['c_des']
+
 
   tableName: string = 'chat'
   sqlCreate: string = `CREATE TABLE IF NOT EXISTS ${this.tableName} (
@@ -73,9 +77,8 @@ struct Index {
   onPageShow(): void {
     let record  = router.getParams() as Record<string,number>
     if (record) {
-      this.userId = record['u_id']
-      this.userName = (router.getParams() as Record<string, string>)['u_name']
-      AlertDialog.show({ message: 'userid: ' + this.userId })
+      this.u_id = record['u_id']
+      AlertDialog.show({ message: 'userid: ' + this.u_id })
     }
   }
 
@@ -84,7 +87,10 @@ struct Index {
       Tabs({ barPosition: BarPosition.End, controller: this.tabController }) {
         // 微信（首页）
         TabContent() {
-          home({ userId: this.userId,userName: this.userName})
+          home({
+            u_id: this.u_id,
+            u_name: this.u_name
+          })
         }
         .tabBar(this.createTabMenu(0))
 
@@ -103,8 +109,8 @@ struct Index {
         // 我的
         TabContent() {
           Setting({
-            userId: this.userId,
-            userName: this.userName
+            u_id: this.u_id,
+            u_name: this.u_name
           })
         }
         .tabBar(this.createTabMenu(2))

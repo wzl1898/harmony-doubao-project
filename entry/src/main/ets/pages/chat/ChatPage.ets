@@ -145,15 +145,7 @@ export default struct ChatPage {
     return this.store
   }
 
-  @State private dataList: ChatContentItemData[] = [
-    {
-      name: "鲁班",
-      headSrc: $r("app.media.ic_user_head2"),
-      msgType: 0,
-      self: true,
-      msg: "现在几点了？"
-    }
-  ]
+  @State private dataList: ChatContentItemData[] = [ ]
   // 输入框内容
   @State
   textValue: string = ""
@@ -244,8 +236,8 @@ export default struct ChatPage {
   }
 
   @State c_id: number = (router.getParams() as Record<string,number>) ['c_id'];
-  @State userId: number = (router.getParams() as Record<string,number>) ['userId'];
-  @State userName: number = (router.getParams() as Record<string,string>) ['userName'];
+  @State u_id: number = (router.getParams() as Record<string,number>) ['u_id'];
+  @State u_name: string = (router.getParams() as Record<string,string>) ['u_name'];
   async aboutToAppear() {
     // this.name = (router.getParams() as ChatPageParam).name
     this.name = "豆包"
@@ -356,11 +348,11 @@ export default struct ChatPage {
   build() {
     Column() {
       Toolbar({ title: this.name,
-        userId: this.userId,
+        u_id: this.u_id,
         c_id: this.c_id,
-        userName: this.username,
-        name: (this.chatList.length > 0 ) ? this.chatList[0].content:null,
-        des: (this.chatList.length > 0 ) ? this.chatList[1].content:null
+        u_name: this.u_name,
+        c_name: (this.chatList.length > 0 ) ? this.chatList[0].content:'',
+        c_des: (this.chatList.length > 0 ) ? this.chatList[1].content:''
       })
       List({ space: 20, initialIndex: this.dataList.length, scroller: this.scroller }) {
         ForEach(this.dataList, (item: ChatContentItemData) => {

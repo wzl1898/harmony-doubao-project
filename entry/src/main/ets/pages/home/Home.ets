@@ -17,8 +17,9 @@ interface Chat extends ValuesBucket {
 @Preview
 @Component
 export default struct Home {
-  userId :number = 0
-  userName :string = ''
+  u_id :number = 0
+  u_name :string = ''
+
   tableName: string = 'chat'
   sqlCreate: string = `CREATE TABLE IF NOT EXISTS ${this.tableName} (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -108,8 +109,8 @@ export default struct Home {
               url: 'pages/chat/ChatPage',
               params: {
                 c_id: item.id,
-                userId: this.userId,
-                userName: this.userName
+                userId: this.u_id,
+                userName: this.u_name
               }
             })
           })

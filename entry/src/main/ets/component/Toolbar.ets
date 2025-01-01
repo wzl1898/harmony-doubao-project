@@ -10,11 +10,11 @@ export default struct Toolbar {
   private subTitle: string = "更多"
   private subIconSrc: string | PixelMap | Resource = $r("app.media.ic_toolbar_more")
 
-  userId:number = 0
-  userName:string = ''
+  u_id:number = 0
+  u_name:string = ''
   c_id:number = 0
-  name:string = ''
-  des:string = ''
+  c_name:string = ''
+  c_des:string = ''
 
   build() {
     Column() {
@@ -27,7 +27,13 @@ export default struct Toolbar {
             // router.back()
             router.pushUrl({
               url: 'pages/Index',
-              params: {}
+              params: {
+                u_id: this.u_id,
+                u_name: this.u_name,
+                c_id: this.c_id,
+                c_name: this.c_name,
+                c_des: this.c_des
+              }
             })
           })
 
