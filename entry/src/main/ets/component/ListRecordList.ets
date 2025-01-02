@@ -44,6 +44,61 @@ export default struct ListRecordItem {
     return this.store
   }
 
+  dateFormat(date?: number | Date, fmt?: string) {
+    let _date = new Date();
+    if (date == undefined || date == null) {
+      _date = new Date();
+    } else if (typeof (date) === 'number') {
+      _date = new Date(date);
+    }
+    if (fmt == undefined || fmt == null || fmt.length <= 0) {
+      fmt = "yyyy-MM-dd HH:mm";
+    }
+    let map = new Map<String, Number>();
+    map.set("M+", _date.getMonth() + 1); // 月份
+    map.set("d+", _date.getDate()); // 日
+    map.set("h+", _date.getHours() % 12 == 0 ? 12 : _date.getHours() % 12); // 12小时
+    map.set("H+", _date.getHours()); // 24小时
+    map.set("m+", _date.getMinutes()); // 分
+    map.set("s+", _date.getSeconds()); // 秒
+    map.set("q+", Math.floor((_date.getMonth() + 3) / 3)); // 季度
+    map.set("S", _date.getMilliseconds()); // 毫秒
+
+    let week = new Map<string, string>();
+    week.set("0", "日");
+    week.set("1", "一");
+    week.set("2", "二");
+    week.set("3", "三");
+    week.set("4", "四");
+    week.set("5", "五");
+    week.set("6", "六");
+    let yearMatcher = /(y+)/.exec(fmt);
+    if (yearMatcher && yearMatcher.length > 0) {
+      let match = yearMatcher[0];
+      fmt = fmt.replace(match, (_date.getFullYear() + "").substr(4 - match.length));
+    }
+    let weekMatcher = /(E+)/.exec(fmt);
+    if (weekMatcher && weekMatcher.length > 0) {
+      let match = weekMatcher[0];
+      fmt = fmt.replace(match,
+        ((match.length > 1) ? (match.length > 2 ? "星期" : "周") : "") + week.get(_date.getDay() + ""));
+    }
+    map.forEach((value, key) => {
+      let matcher = new RegExp(`(${key})`).exec(fmt!);
+      if (matcher && matcher.length > 0) {
+        let match = matcher[0];
+        let replaceValue = '';
+        if ((match.length == 1)) {
+          replaceValue = `${value}`;
+        } else {
+          replaceValue = (("00" + value).substr(("" + value).length))
+        }
+        fmt = fmt!.replace(match, replaceValue);
+      }
+    });
+    return fmt;
+  }
+
   build() {
     Row() {
       Column() {
@@ -63,33 +118,23 @@ export default struct ListRecordItem {
           .textOverflow({ overflow: TextOverflow.Ellipsis })
           .margin({ top: 7 })
 
-        Button("删除", { type: ButtonType.Capsule })
-          .width("20vp")
-          .height("20vp")
-          .fontSize($r('app.float.normal_text_size'))
-          .fontColor($r('app.color.setting_button_font'))
-          .fontWeight(FontWeight.Medium)
-          .backgroundColor($r('app.color.setting_button_background'))
-          .margin({ bottom: $r('app.float.setting_button_bottom')})
-          .onClick(async () => {
-            //TODO: delete conversation
-            // 获取操作数据库对象
-            const store = await this.getStoreInstance()
-            const predicates = new relationalStore.RdbPredicates(this.tableName)
-            predicates.equalTo('id', this.data.id)
-            const affectedRows = await store.delete(predicates)
-            if (affectedRows > 0) AlertDialog.show({ message: '删除成功' })
-            // 能删除 但是ui不能马上更新
-          })
+
       }.layoutWeight(1)
       .margin({ right: 30 })
       .alignItems(HorizontalAlign.Start)
 
-      Text(new Date(this.data.time).toString())
+
+      Text(this.dateFormat(this.data.time))
         .fontColor(Color.Gray)
         .fontSize(14)
         .alignSelf(ItemAlign.Start)
         .margin({ top: 15, right: 6 })
+
+      // Text(new Date(this.data.time).toString())
+      //   .fontColor(Color.Gray)
+      //   .fontSize(14)
+      //   .alignSelf(ItemAlign.Start)
+      //   .margin({ top: 15, right: 6 })
     }
     .width("100%")
     .height(80)

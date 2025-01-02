@@ -71,7 +71,7 @@ struct Index {
       des: '',
       time: Date.now()
     } as Chat)
-    AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
+    // AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
     return id
   }
 
@@ -81,7 +81,7 @@ struct Index {
     const predicates = new relationalStore.RdbPredicates(this.tableName)
     predicates.equalTo('id', id)
     const affectedRows = await store.delete(predicates)
-    if (affectedRows > 0) AlertDialog.show({ message: '删除成功' })
+    // if (affectedRows > 0) AlertDialog.show({ message: '删除成功' })
   }
 
   async onPageShow(): Promise<void> {
@@ -106,7 +106,7 @@ struct Index {
           time: Date.now()
         } as Chat
         const affectedRows = await store.update(value, predicates)
-        if (affectedRows > 0) AlertDialog.show({ message: '修改成功' })
+        // if (affectedRows > 0) AlertDialog.show({ message: '修改成功' })
       }
     }
   }
@@ -163,7 +163,7 @@ struct Index {
             des: '',
             time: Date.now()
           } as Chat)
-          AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
+          // AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
           router.pushUrl({
             url: 'pages/chat/ChatPage',
             params: {
@@ -243,7 +243,7 @@ struct Index {
                   des: '',
                   time: Date.now()
                 } as Chat)
-                AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
+                // AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
                 router.pushUrl({
                   url: url_str,
                   params: {
@@ -281,7 +281,7 @@ struct Index {
                   des: '',
                   time: Date.now()
                 } as Chat)
-                AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
+                // AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
                 router.pushUrl({
                   url: url_str,
                   params: {

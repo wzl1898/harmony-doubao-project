@@ -362,7 +362,7 @@ export default struct ChatPage {
         c_name: $c_name,
         c_des: $c_des
       })
-      List({ space: 20, initialIndex: this.dataList.length, scroller: this.scroller }) {
+      List({ space: 20, initialIndex: this.dataList.length - 1, scroller: this.scroller }) {
         ForEach(this.dataList, (item: ChatContentItemData) => {
           ListItem() {
             if (item.self) {
@@ -525,11 +525,12 @@ export default struct ChatPage {
       self: true,
       msg: this.chatText,
     })
-    this.scroller.scrollToIndex(this.dataList.length)
+
     if (this.dataList.length == 1) {
       this.c_name = this.chatText
     }
     this.test_api(this.chatText)
+    this.scroller.scrollToIndex(this.dataList.length)
     this.chatText = ""
   }
 

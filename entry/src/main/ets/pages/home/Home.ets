@@ -95,6 +95,31 @@ export default struct Home {
     }
   ]
 
+  @Builder DeleteButton(id: number, index: number) {
+    Button("删除",{ type: ButtonType.Normal})
+      .width(80)
+      .height(80)
+      .fontSize($r('app.float.normal_text_size'))
+      .fontColor($r('app.color.setting_button_font'))
+      .fontWeight(FontWeight.Medium)
+      .backgroundColor($r('app.color.setting_button_background'))
+      // .margin({ bottom: $r('app.float.setting_button_bottom')})
+      .borderRadius(0)
+      .onClick(async () => {
+        //TODO: delete conversation
+        // 获取操作数据库对象
+        const store = await this.getStoreInstance()
+        const predicates = new relationalStore.RdbPredicates(this.tableName)
+        predicates.equalTo('id', id)
+        const affectedRows = await store.delete(predicates)
+        // if (affectedRows > 0) AlertDialog.show({ message: '删除成功' })
+        // 能删除 但是ui不能马上更新
+
+        this.chatList.splice(index, 1)
+
+      })
+  }
+
   build() {
     Column() {
       WechatToolbar({ title: "豆包" })
@@ -104,6 +129,7 @@ export default struct Home {
           ListItem() {
             ListRecordItem({ data: item })
           }
+          .swipeAction({ end: this.DeleteButton(item.id, index) })
           .onClick(() => {
             //AlertDialog.show({ message: 'home userid: ' + this.u_id +',  name:'+ this.u_name})
 
