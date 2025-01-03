@@ -40,7 +40,7 @@ export default struct Toolbar {
             })
           })
 
-        Text(this.title)
+        Text((this.c_name == '')? '新会话':this.c_name)
           .fontColor(Color.Black)
           .fontSize(19)
           .fontWeight(500)

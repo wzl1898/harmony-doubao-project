@@ -109,7 +109,57 @@ struct Index {
         // if (affectedRows > 0) AlertDialog.show({ message: '修改成功' })
       }
     }
+
+    const store = await this.getStoreInstance()
+    const predicates = new relationalStore.RdbPredicates(this.tableName)
+    // predicates.orderByDesc('id') // 倒序(由大到小，常用于排序)
+    predicates.orderByAsc('id')   // 正序(小到大，常用于排序)
+    predicates.equalTo('u_id', this.u_id)    // 等于(常用于详情页)
+    // predicates.in('id', [1, 3, 5]) // 查找多项(常用批量删除)
+    // predicates.like('title', '%哈%') //  模糊匹配(常用于搜索)
+    // 还有很多...
+    // predicates.greaterThan('id', 3)
+    // resultSet 结果集
+    const resultSet = await store.query(predicates)
+    // 准备一个数组，用于存储数据库提取的数据
+    const list: Chat [] = []
+    // resultSet.goToNextRow()   指针移动到下一行
+    while (resultSet.goToNextRow()) {
+      // 移动指针的时候提取数据，按列下标提取数据
+      list.push({
+        // resultSet.getColumnIndex()        根据列名称获取下标(索引)
+        id: resultSet.getLong(resultSet.getColumnIndex('id')),
+        u_id: resultSet.getLong(resultSet.getColumnIndex('u_id')),
+        name: resultSet.getString(resultSet.getColumnIndex('name')),
+        des: resultSet.getString(resultSet.getColumnIndex('des')),
+        time: resultSet.getLong(resultSet.getColumnIndex('time')),
+      })
+    }
+    //AlertDialog.show({ message: 'new' })
+    if (list.length == 0) {
+      // 添加一条数据
+      const id = await store.insert(this.tableName, {
+        id: null, // 新增时设置 id 为空值 null，用于自增 id
+        u_id: this.u_id,
+        name: '新会话',
+        des: '',
+        time: Date.now()
+      } as Chat)
+      // AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
+      router.pushUrl({
+        url: 'pages/chat/ChatPage',
+        params: {
+          c_id:id,
+          u_id: this.u_id,
+          u_name: this.u_name
+        }
+      })
+    }
   }
+
+  // function sub(x: number): number {
+  //   return x - 10086
+  // }
 
   build() {
     Column() {
