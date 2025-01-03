@@ -8,11 +8,10 @@ import WindowManager from '../utils/WindowManager'
 import { relationalStore, ValuesBucket } from '@kit.ArkData'
 import promptAction from '@ohos.promptAction';
 
-
 interface Chat extends ValuesBucket {
   id: number | null // 新增时设置 id 为空值 null，用于自增 id
   u_id: number
-  //m_id: number
+  m_id: number
   name: string
   des: string
   time: number
@@ -31,14 +30,15 @@ struct Index {
   @State u_id: number = 0
   u_name = (router.getParams() as Record<string, string>)['u_name']
   c_id = (router.getParams() as Record<string, number>)['c_id']
+  m_id = (router.getParams() as Record<string, number>)['m_id']
   c_name = (router.getParams() as Record<string, string>)['c_name']
   c_des = (router.getParams() as Record<string, string>)['c_des']
-
 
   tableName: string = 'chat'
   sqlCreate: string = `CREATE TABLE IF NOT EXISTS ${this.tableName} (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         u_id INTEGER NOT NULL,
+        m_id INTEGER NOT NULL,
         name TEXT NOT NULL,
         des TEXT,
         time INTEGER NOT NULL
@@ -62,34 +62,6 @@ struct Index {
     return this.store
   }
 
-  selectModel():number{
-    let res:number = -1
-    promptAction.showActionMenu({
-      title: "选择模型",
-      buttons: [
-        {
-          text: "苹果",
-          color: "#f00"
-        },
-        {
-          text: "橙子",
-          color: "#f0f"
-        },
-        {
-          text: "香蕉",
-          color: "#ff0"
-        }
-      ]
-    })
-      .then(data => {
-        AlertDialog.show({ message: "showActionMenu success, data: " + JSON.stringify(data )});
-        res = data.index
-      }).catch((err: Error) => {
-      AlertDialog.show({ message: 'showDialog error: ' + err});
-    })
-    return res
-  }
-
   async addNewChat() {
     // 获取操作数据库的对象
     const store = await this.getStoreInstance()
@@ -98,6 +70,7 @@ struct Index {
     const id = await store.insert(this.tableName, {
       id: null, // 新增时设置 id 为空值 null，用于自增 id
       u_id: this.u_id,
+      m_id: 0,
       name: '新会话',
       des: '',
       time: Date.now()
@@ -106,9 +79,10 @@ struct Index {
     router.pushUrl({
       url: 'pages/chat/ChatPage',
       params: {
-        c_id:id,
+        c_id: id,
         u_id: this.u_id,
-        u_name: this.u_name
+        u_name: this.u_name,
+        m_id: 0
       }
     })
   }
@@ -139,6 +113,7 @@ struct Index {
         predicates.equalTo('id', this.c_id)
         // 待更新数据
         const value = {
+          m_id: this.m_id,
           name: this.c_name,
           des: this.c_des,
           time: Date.now()
@@ -168,6 +143,7 @@ struct Index {
         // resultSet.getColumnIndex()        根据列名称获取下标(索引)
         id: resultSet.getLong(resultSet.getColumnIndex('id')),
         u_id: resultSet.getLong(resultSet.getColumnIndex('u_id')),
+        m_id: resultSet.getLong(resultSet.getColumnIndex('m_id')),
         name: resultSet.getString(resultSet.getColumnIndex('name')),
         des: resultSet.getString(resultSet.getColumnIndex('des')),
         time: resultSet.getLong(resultSet.getColumnIndex('time')),

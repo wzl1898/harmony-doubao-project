@@ -159,6 +159,7 @@ struct LoginPage {
           c_id: 0,
           c_des: '',
           c_name: '',
+          m_id: 0
         }
       });
     }
