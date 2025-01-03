@@ -6,6 +6,8 @@ import Setting from './mine/Setting'
 import WindowManager from '../utils/WindowManager'
 
 import { relationalStore, ValuesBucket } from '@kit.ArkData'
+import promptAction from '@ohos.promptAction';
+
 
 interface Chat extends ValuesBucket {
   id: number | null // 新增时设置 id 为空值 null，用于自增 id
@@ -60,19 +62,55 @@ struct Index {
     return this.store
   }
 
+  selectModel():number{
+    let res:number = -1
+    promptAction.showActionMenu({
+      title: "选择模型",
+      buttons: [
+        {
+          text: "苹果",
+          color: "#f00"
+        },
+        {
+          text: "橙子",
+          color: "#f0f"
+        },
+        {
+          text: "香蕉",
+          color: "#ff0"
+        }
+      ]
+    })
+      .then(data => {
+        AlertDialog.show({ message: "showActionMenu success, data: " + JSON.stringify(data )});
+        res = data.index
+      }).catch((err: Error) => {
+      AlertDialog.show({ message: 'showDialog error: ' + err});
+    })
+    return res
+  }
+
   async addNewChat() {
     // 获取操作数据库的对象
     const store = await this.getStoreInstance()
+
     // 添加一条数据
     const id = await store.insert(this.tableName, {
       id: null, // 新增时设置 id 为空值 null，用于自增 id
-      u_id: 1,
+      u_id: this.u_id,
       name: '新会话',
       des: '',
       time: Date.now()
     } as Chat)
     // AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
-    return id
+    router.pushUrl({
+      url: 'pages/chat/ChatPage',
+      params: {
+        c_id:id,
+        u_id: this.u_id,
+        u_name: this.u_name
+      }
+    })
   }
 
   async deleteChat(id:number) {
@@ -137,23 +175,7 @@ struct Index {
     }
     //AlertDialog.show({ message: 'new' })
     if (list.length == 0) {
-      // 添加一条数据
-      const id = await store.insert(this.tableName, {
-        id: null, // 新增时设置 id 为空值 null，用于自增 id
-        u_id: this.u_id,
-        name: '新会话',
-        des: '',
-        time: Date.now()
-      } as Chat)
-      // AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
-      router.pushUrl({
-        url: 'pages/chat/ChatPage',
-        params: {
-          c_id:id,
-          u_id: this.u_id,
-          u_name: this.u_name
-        }
-      })
+      this.addNewChat()
     }
   }
 
@@ -189,6 +211,8 @@ struct Index {
   // function sub(x: number): number {
   //   return x - 10086
   // }
+
+
 
   build() {
     Column() {
@@ -232,25 +256,7 @@ struct Index {
       .padding({ bottom: WindowManager.navBarHeight })
       .onChange(async (index: number) => {
         if (index == 1) {
-          // 获取操作数据库的对象
-          const store = await this.getStoreInstance()
-          // 添加一条数据
-          const id = await store.insert(this.tableName, {
-            id: null, // 新增时设置 id 为空值 null，用于自增 id
-            u_id: this.u_id,
-            name: '新会话',
-            des: '',
-            time: Date.now()
-          } as Chat)
-          // AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
-          router.pushUrl({
-            url: 'pages/chat/ChatPage',
-            params: {
-              c_id:id,
-              u_id: this.u_id,
-              u_name: this.u_name
-            }
-          })
+          this.addNewChat()
         }
         this.currentIndex = index
 
@@ -313,24 +319,7 @@ struct Index {
                 url_str = 'pages/Mine'
               }
               if (this.currentIndex == 1) {
-                const store = await this.getStoreInstance()
-                // 添加一条数据
-                const id = await store.insert(this.tableName, {
-                  id: null, // 新增时设置 id 为空值 null，用于自增 id
-                  u_id: this.u_id,
-                  name: '新会话',
-                  des: '',
-                  time: Date.now()
-                } as Chat)
-                // AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
-                router.pushUrl({
-                  url: url_str,
-                  params: {
-                    c_id:id,
-                    u_id: this.u_id,
-                    u_name: this.u_name
-                  }
-                })
+                this.addNewChat()
               }
             })
           // 文本
@@ -351,24 +340,7 @@ struct Index {
                 url_str = 'pages/Mine'
               }
               if (this.currentIndex == 1) {
-                const store = await this.getStoreInstance()
-                // 添加一条数据
-                const id = await store.insert(this.tableName, {
-                  id: null, // 新增时设置 id 为空值 null，用于自增 id
-                  u_id: this.u_id,
-                  name: '新会话',
-                  des: '',
-                  time: Date.now()
-                } as Chat)
-                // AlertDialog.show({ message: '新增数组成功，数据的id为：' + id })
-                router.pushUrl({
-                  url: url_str,
-                  params: {
-                    c_id:id,
-                    u_id: this.u_id,
-                    u_name: this.u_name
-                  }
-                })
+                this.addNewChat()
               }
             })
         }
