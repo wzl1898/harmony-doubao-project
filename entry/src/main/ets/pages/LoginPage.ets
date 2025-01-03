@@ -147,43 +147,39 @@ struct LoginPage {
       user.id = resultSet.getLong(resultSet.getColumnIndex('id'))
       user.name = resultSet.getString(resultSet.getColumnIndex('name'))
       user.psw = resultSet.getString(resultSet.getColumnIndex('psw'))
-      if (user.psw != this.password) {
-        AlertDialog.show({ message: '密码错误'})
-        return
-      }
-      router.replaceUrl({
-        url: 'pages/Index',
-        params: {
-          u_id: user.id,
-          u_name: user.name,
-          c_id: 0,
-          c_des: '',
-          c_name: '',
-        }
-      });
     }
 
-    // Logger.info('username' + userName)
-    // if (this.account !== userName) {
-    //   PromptUtil.promptMessage($r('app.string.message_login_prompt'), CommonConstants.PROMPT_DURATION);
-    //   return;
-    // }
-    // let cryptoPassword = PreferenceModel.getPreference(CommonConstants.CRYPTO_PASSWORD, '') as string;
-    //
-    // let base64Helper = new util.Base64Helper();
-    // let result = base64Helper.decodeSync(cryptoPassword);
-    // Logger.info('username' + JSON.stringify(result))
-    // await HuksModel.decrypt(this.keyAlias, Array.from(result)).then((cryptoData?: string) => {
-    //   Logger.info('username' + cryptoData + '   ' + this.password)
-    //   if (cryptoData && cryptoData === this.password) {
-    //     this.userLogin = true;
-    //   } else {
-    //     PromptUtil.promptMessage($r('app.string.message_login_prompt'), CommonConstants.PROMPT_DURATION);
-    //   }
-    // }).catch((error: BusinessError) => {
-    //   Logger.error(`huks decode failed cause ${error.code} ${error.message}`);
-    //   PromptUtil.promptMessage($r('app.string.message_login_prompt'), CommonConstants.PROMPT_DURATION);
-    // })
+    Logger.info('username' + userName)
+    if (this.account !== userName) {
+      PromptUtil.promptMessage($r('app.string.message_login_prompt'), CommonConstants.PROMPT_DURATION);
+      return;
+    }
+    let cryptoPassword = PreferenceModel.getPreference(CommonConstants.CRYPTO_PASSWORD, '') as string;
+
+    let base64Helper = new util.Base64Helper();
+    let result = base64Helper.decodeSync(cryptoPassword);
+    Logger.info('username' + JSON.stringify(result))
+    await HuksModel.decrypt(this.keyAlias, Array.from(result)).then((cryptoData?: string) => {
+      Logger.info('username' + cryptoData + '   ' + this.password)
+      if (cryptoData && cryptoData === this.password) {
+        this.userLogin = true;
+        router.replaceUrl({
+          url: 'pages/Index',
+          params: {
+            u_id: user.id,
+            u_name: user.name,
+            c_id: 0,
+            c_des: '',
+            c_name: '',
+          }
+        });
+      } else {
+        PromptUtil.promptMessage($r('app.string.message_login_prompt'), CommonConstants.PROMPT_DURATION);
+      }
+    }).catch((error: BusinessError) => {
+      Logger.error(`huks decode failed cause ${error.code} ${error.message}`);
+      PromptUtil.promptMessage($r('app.string.message_login_prompt'), CommonConstants.PROMPT_DURATION);
+    })
   }
 
   /**

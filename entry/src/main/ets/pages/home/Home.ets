@@ -53,7 +53,7 @@ export default struct Home {
     const predicates = new relationalStore.RdbPredicates(this.tableName)
     // predicates.orderByDesc('id') // 倒序(由大到小，常用于排序)
     predicates.orderByAsc('id')   // 正序(小到大，常用于排序)
-    predicates.equalTo('u_id', this.u_id)    // 等于(常用于详情页)
+    // predicates.equalTo('id', 1)    // 等于(常用于详情页)
     // predicates.in('id', [1, 3, 5]) // 查找多项(常用批量删除)
     // predicates.like('title', '%哈%') //  模糊匹配(常用于搜索)
     // 还有很多...
@@ -85,7 +85,15 @@ export default struct Home {
     });
   }
 
-  @State chatList: Chat[] = []
+  @State chatList: Chat[] = [
+    {
+      id: 1,
+      u_id: 1,
+      name: 'test',
+      des: 'string',
+      time: 0
+    }
+  ]
 
   @Builder DeleteButton(id: number, index: number) {
     Button("删除",{ type: ButtonType.Normal})
