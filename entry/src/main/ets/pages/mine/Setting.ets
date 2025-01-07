@@ -129,6 +129,16 @@ export default struct Setting {
         .padding({ left: $r('app.float.setting_account_padding') })
         .borderRadius($r('app.float.setting_account_radius'))
 
+        Button('管理提示词')
+          .onClick(() => {
+            //AlertDialog.show({ message: '1'})
+
+            router.pushUrl({
+              url: './PromptPage'
+            })
+          })
+
+
         // List() {
         //   ForEach(mainViewModel.getSettingListData(), (item: ItemData) => {
         //     ListItem() {

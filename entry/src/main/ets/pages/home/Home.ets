@@ -89,14 +89,6 @@ export default struct Home {
   }
 
   @State chatList: Chat[] = [
-    {
-      id: 1,
-      u_id: 1,
-      m_id: 1,
-      name: 'test',
-      des: 'string',
-      time: 0
-    }
   ]
 
   @Builder DeleteButton(id: number, index: number) {
