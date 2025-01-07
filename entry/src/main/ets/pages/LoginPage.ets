@@ -147,6 +147,21 @@ struct LoginPage {
       user.id = resultSet.getLong(resultSet.getColumnIndex('id'))
       user.name = resultSet.getString(resultSet.getColumnIndex('name'))
       user.psw = resultSet.getString(resultSet.getColumnIndex('psw'))
+      if (user.psw != this.password) {
+        AlertDialog.show({ message: '密码错误'})
+        return
+      }
+      router.replaceUrl({
+        url: 'pages/Index',
+        params: {
+          u_id: user.id,
+          u_name: user.name,
+          c_id: 0,
+          c_des: '',
+          c_name: '',
+          m_id: 0
+        }
+      });
     }
 
     Logger.info('username' + userName)

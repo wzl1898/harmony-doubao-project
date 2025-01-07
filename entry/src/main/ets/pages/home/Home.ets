@@ -7,7 +7,7 @@ import ListRecordItem from '../../component/ListRecordList'
 interface Chat extends ValuesBucket {
   id: number | null // 新增时设置 id 为空值 null，用于自增 id
   u_id: number
-  //m_id: number
+  m_id: number
   name: string
   des: string
   time: number
@@ -24,6 +24,7 @@ export default struct Home {
   sqlCreate: string = `CREATE TABLE IF NOT EXISTS ${this.tableName} (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         u_id INTEGER NOT NULL,
+        m_id INTEGER NOT NULL,
         name TEXT NOT NULL,
         des TEXT,
         time INTEGER NOT NULL
@@ -69,6 +70,7 @@ export default struct Home {
         // resultSet.getColumnIndex()        根据列名称获取下标(索引)
         id: resultSet.getLong(resultSet.getColumnIndex('id')),
         u_id: resultSet.getLong(resultSet.getColumnIndex('u_id')),
+        m_id: resultSet.getLong(resultSet.getColumnIndex('m_id')),
         name: resultSet.getString(resultSet.getColumnIndex('name')),
         des: resultSet.getString(resultSet.getColumnIndex('des')),
         time: resultSet.getLong(resultSet.getColumnIndex('time')),
@@ -78,6 +80,7 @@ export default struct Home {
       this.chatList.push({
         id: element.id,
         u_id: element.u_id,
+        m_id: element.m_id,
         name: element.name,
         des: element.des,
         time: element.time
@@ -89,6 +92,7 @@ export default struct Home {
     {
       id: 1,
       u_id: 1,
+      m_id: 1,
       name: 'test',
       des: 'string',
       time: 0
@@ -137,6 +141,7 @@ export default struct Home {
               url: 'pages/chat/ChatPage',
               params: {
                 c_id: item.id,
+                m_id: item.m_id,
                 u_id: this.u_id,
                 u_name: this.u_name
               }

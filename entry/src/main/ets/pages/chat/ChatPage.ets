@@ -18,6 +18,7 @@ import hilog from '@ohos.hilog';
 // import { JSON } from '@kit.ArkTS';
 import ALiYunResponse from "../../utils/ALiYunResponse"
 import { relationalStore, ValuesBucket} from '@kit.ArkData'
+import { it } from '@ohos/hypium';
 
 enum WXInputType {
   /**
@@ -240,6 +241,7 @@ export default struct ChatPage {
 
   @State c_id: number = (router.getParams() as Record<string,number>) ['c_id'];
   @State u_id: number = (router.getParams() as Record<string,number>) ['u_id'];
+  @State m_id: number = (router.getParams() as Record<string,number>) ['m_id'];
   @State u_name: string = (router.getParams() as Record<string,string>) ['u_name'];
   async aboutToAppear() {
     //AlertDialog.show({ message: 'chat page userid: ' + this.u_id +',  name:'+ this.u_name})
@@ -360,7 +362,8 @@ export default struct ChatPage {
         c_id: this.c_id,
         u_name: this.u_name,
         c_name: $c_name,
-        c_des: $c_des
+        c_des: $c_des,
+        m_id: $m_id,
       })
       List({ space: 20, initialIndex: this.dataList.length - 1, scroller: this.scroller }) {
         ForEach(this.dataList, (item: ChatContentItemData) => {
@@ -381,6 +384,20 @@ export default struct ChatPage {
       // .divider({ strokeWidth: 0.8, color: '#f0f0f0', startMargin: 90, endMargin: 0 }) // 每行之间的分界线
       .layoutWeight(1)
 
+      Row(){
+        Text('如果对回答不满意，可点击')
+          .fontSize(12)
+          .fontColor(Color.Gray)
+        Button('重新发送')
+          .enabled(this.dataList.length > 0)
+          .fontSize(12)
+          .backgroundColor(Color.Transparent)
+          .fontColor(Color.Blue)
+          .onClick(() => {
+            this.chatText = '请重新回答:' + this.dataList[this.dataList.length - 2].msg
+            this.sendTextMsg(1)
+          })
+      }
       Row() {
 
         if (this.inputType == WXInputType.keyboard) {
@@ -505,7 +522,7 @@ export default struct ChatPage {
   }
 
 
-  private async  sendTextMsg() {
+  private async  sendTextMsg(type?:number) {
     // TODO: save the new message to database
     // 获取操作数据库的对象
     const store = await this.getStoreInstance()
@@ -529,7 +546,19 @@ export default struct ChatPage {
     if (this.dataList.length == 1) {
       this.c_name = this.chatText
     }
-    this.test_api(this.chatText)
+
+    // 上下文逻辑
+    let prompt : string = ''
+    if (this.dataList.length > 0) {
+      prompt += '上下文为：'
+      this.dataList.forEach(item => {
+        if (item.self) prompt += ('问:' + item.msg)
+        else prompt += ('答:' + item.msg)
+      })
+    }
+
+    this.test_api(prompt + this.chatText)
+
     this.scroller.scrollToIndex(this.dataList.length)
     this.chatText = ""
   }
@@ -579,6 +608,11 @@ export default struct ChatPage {
         //   content: question,
         //   time: "周一" })
         // const chat = new ChatMessage(MessageType.text, res);
+
+
+        let answer : string = ''
+        answer = resp.output.text
+
         //TODO: save the AI response message to database
         // 获取操作数据库的对象
         const store = await this.getStoreInstance()
@@ -587,7 +621,7 @@ export default struct ChatPage {
         const id = await store.insert(this.tableName, {
           id: null, // 新增时设置 id 为空值 null，用于自增 id
           c_id: this.c_id,
-          msg: resp.output.text,
+          msg: answer,
           self: 0
         } as ChatContent)
 
@@ -596,7 +630,7 @@ export default struct ChatPage {
           headSrc: $r("app.media.ic_user_head7"),
           msgType: 0,
           self: false,
-          msg: resp.output.text,
+          msg: answer,
         })
 
         if (this.dataList.length == 2) {
