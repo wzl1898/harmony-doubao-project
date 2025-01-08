@@ -21,6 +21,8 @@ export default struct Toolbar {
   modelIndex:string[] =[
     '通义千问',
     '质谱清言',
+    '百度千帆',
+    "Kimi"
   ]
 
   build() {
@@ -70,6 +72,14 @@ export default struct Toolbar {
                 },
                 {
                   text: this.modelIndex[1],
+                  color: "#000"
+                },
+                {
+                  text: this.modelIndex[2],
+                  color: "#000"
+                },
+                {
+                  text: this.modelIndex[3],
                   color: "#000"
                 }
               ]

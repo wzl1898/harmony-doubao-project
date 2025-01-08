@@ -147,6 +147,85 @@ interface ZhiPuResponse {
   usage: Usage;
 }
 
+// 用于表示 arguments 结构
+interface Arguments {
+  origin_query: string;
+  component_code: string;
+  component_name: string;
+}
+
+// 用于表示 outputs 中的 text 结构
+interface TextOutput {
+  arguments: Arguments;
+}
+
+// 通用的 outputs 结构
+interface Outputs {
+  text?: TextOutput;
+}
+
+interface BaiduUsage {
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+  name: string;
+  type: string;
+}
+// 表示 content 数组中的单个元素
+interface ContentItem {
+  result_type: string;
+  event_code: number;
+  event_message: string;
+  event_type: string;
+  event_id: string;
+  event_status: string;
+  content_type: string;
+  visible_scope: string;
+  outputs?: Outputs;
+  usage?: BaiduUsage
+}
+
+// 整体的接口
+interface BaiduResponse {
+  request_id: string;
+  date: string;
+  answer: string;
+  conversation_id: string;
+  message_id: string;
+  is_completion: null;
+  content: ContentItem[];
+}
+
+// 定义 message 部分的接口
+interface KimiMessage {
+  role: string;
+  content: string;
+}
+
+// 定义 choices 数组内元素的接口
+interface KimiChoice {
+  index: number;
+  message: KimiMessage;
+  finish_reason: string;
+}
+
+// 定义 usage 部分的接口
+interface KimiUsage {
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+}
+
+// 定义整个 JSON 对应的接口
+interface KimiResponse {
+  id: string;
+  object: string;
+  created: number;
+  model: string;
+  choices: KimiChoice[];
+  usage: KimiUsage;
+}
+
 @Entry
 @Component
 export default struct ChatPage {
@@ -626,7 +705,17 @@ export default struct ChatPage {
         model:zhipuModel,
         auth: zhipuAuth,
         // data: {}
-      }
+      },
+      {
+        url: "https://qianfan.baidubce.com/v2/app/conversation/runs",
+        model: "75bd3865-a1e8-4bc8-9504-3550be3b4736",
+        auth: "Bearer bce-v3/ALTAK-y3mcnHrYzxTp0gxF2ASDk/5bf67a0c8f595e2ca042beb4f7b70bec683890e9"
+      },
+      {
+        url: "https://api.moonshot.cn/v1/chat/completions",
+        model: "moonshot-v1-8k",
+        auth: "Bearer sk-UgqVHwbSdK0Gfu1ER9VoAZqyGd9u2SZECqxMVXjsOaP1p6RA"
+      },
     ]
 
     let auth = qwenAuth
@@ -711,7 +800,8 @@ export default struct ChatPage {
           this.scroller.scrollToIndex(this.dataList.length)
         }
       })
-    }else if (m_id == 1){
+    }
+    else if (m_id == 1){
       hilog.error(0x0000, 'testTag', 'm_id == 1');
       hilog.error(0x0000, 'testTag', 'url: %{public}s', ais[m_id].url);
       httpRequest.request(
@@ -745,6 +835,154 @@ export default struct ChatPage {
           hilog.error(0x0000, 'testTag', 'Request ALiYun success. data: %{public}s', JSON.stringify(data.result));
           httpRequest.destroy();
           let resp: ZhiPuResponse = JSON.parse(data.result.toString())
+          hilog.error(0x0000, 'testTag', 'data.result.text: %{public}', resp.choices[0].message.content)
+          // this.chatList.push({ headSrc: $r("app.media.ic_user_head7"),
+          //   nickname: "老弟",
+          //   content: question,
+          //   time: "周一" })
+          // const chat = new ChatMessage(MessageType.text, res);
+
+
+          let answer : string = ''
+          answer = resp.choices[0].message.content
+
+          //TODO: save the AI response message to database
+          // 获取操作数据库的对象
+          const store = await this.getStoreInstance()
+          console.log("1")
+          // 添加一条数据
+          const id = await store.insert(this.tableName, {
+            id: null, // 新增时设置 id 为空值 null，用于自增 id
+            c_id: this.c_id,
+            msg: answer,
+            self: 0
+          } as ChatContent)
+
+          this.dataList.push({
+            name: "鲁班",
+            headSrc: $r("app.media.ic_user_head7"),
+            msgType: 0,
+            self: false,
+            msg: answer,
+          })
+
+          if (this.dataList.length == 2) {
+            this.c_des = resp.choices[0].message.content
+          }
+
+          this.scroller.scrollToIndex(this.dataList.length)
+        }
+      })
+    }
+    else if (m_id ==2){
+      hilog.error(0x0000, 'testTag', 'm_id == 2');
+      hilog.error(0x0000, 'testTag', 'url: %{public}s', ais[m_id].url);
+      httpRequest.request(
+        // 请求地址
+        ais[m_id].url,
+        // 请求options: HttpRequestOptions
+        {
+          // 请求方式
+          method: http.RequestMethod.POST,
+          // 请求头
+          header: {
+            "Content-Type": "application/json",
+            // 这里的Authorization 就是刚才工作台查看的 API-KEY
+            "X-Appbuilder-Authorization": ais[m_id].auth // 脱敏处理
+          },
+          // 请求体
+          extraData: {
+            "app_id": "75bd3865-a1e8-4bc8-9504-3550be3b4736",
+            // ais[m_id].inputName: ais[m_id].inputBody,
+            "query": question,
+            "conversation_id": "56e9e41f-9c2b-4513-aad5-0751775b5b27",
+            "stream": false
+          }
+        }, async (err, data: http.HttpResponse) => {
+        if (err) {
+          hilog.error(0x0000, 'testTag', 'Failed to request ALiYun. Cause: %{public}s', JSON.stringify(err) ?? '');
+          httpRequest.destroy();
+        } else {
+          hilog.error(0x0000, 'testTag', 'Request ALiYun success. data: %{public}s', JSON.stringify(data.result));
+          httpRequest.destroy();
+          let resp: BaiduResponse = JSON.parse(data.result.toString())
+          hilog.error(0x0000, 'testTag', 'data.result.text: %{public}', resp.answer)
+          // this.chatList.push({ headSrc: $r("app.media.ic_user_head7"),
+          //   nickname: "老弟",
+          //   content: question,
+          //   time: "周一" })
+          // const chat = new ChatMessage(MessageType.text, res);
+
+
+          let answer : string = ''
+          answer = resp.answer
+
+          //TODO: save the AI response message to database
+          // 获取操作数据库的对象
+          const store = await this.getStoreInstance()
+          console.log("1")
+          // 添加一条数据
+          const id = await store.insert(this.tableName, {
+            id: null, // 新增时设置 id 为空值 null，用于自增 id
+            c_id: this.c_id,
+            msg: answer,
+            self: 0
+          } as ChatContent)
+
+          this.dataList.push({
+            name: "鲁班",
+            headSrc: $r("app.media.ic_user_head7"),
+            msgType: 0,
+            self: false,
+            msg: answer,
+          })
+
+          if (this.dataList.length == 2) {
+            this.c_des = resp.answer
+          }
+
+          this.scroller.scrollToIndex(this.dataList.length)
+        }
+      })
+    }
+    else if (m_id == 3){
+      hilog.error(0x0000, 'testTag', 'm_id == 3');
+      hilog.error(0x0000, 'testTag', 'url: %{public}s', ais[m_id].url);
+      httpRequest.request(
+        // 请求地址
+        ais[m_id].url,
+        // 请求options: HttpRequestOptions
+        {
+          // 请求方式
+          method: http.RequestMethod.POST,
+          // 请求头
+          header: {
+            "Content-Type": "application/json",
+            // 这里的Authorization 就是刚才工作台查看的 API-KEY
+            "Authorization": ais[m_id].auth // 脱敏处理
+          },
+          // 请求体
+          extraData: {
+            "model": "moonshot-v1-8k",
+            "messages": [
+              {
+                "role": "system",
+                "content": "你是 Kimi，由 Moonshot AI 提供的人工智能助手，你更擅长中文和英文的对话。用户输入中会包含上下文，需要考虑上下文来对用户最后的问题做出回答。"
+              },
+              {
+                "role": "user",
+                "content": question
+              }
+            ]
+          }
+        }, async (err, data: http.HttpResponse) => {
+        if (err) {
+          hilog.error(0x0000, 'testTag', 'Failed to request ALiYun. Cause: %{public}s', JSON.stringify(err) ?? '');
+          httpRequest.destroy();
+        } else {
+          hilog.error(0x0000, 'testTag', 'Request ALiYun success. data: %{public}s', JSON.stringify(data.result));
+          httpRequest.destroy();
+          let resp: KimiResponse = JSON.parse(data.result.toString())
           hilog.error(0x0000, 'testTag', 'data.result.text: %{public}', resp.choices[0].message.content)
           // this.chatList.push({ headSrc: $r("app.media.ic_user_head7"),
           //   nickname: "老弟",
