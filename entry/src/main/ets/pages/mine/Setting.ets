@@ -35,7 +35,10 @@ export default struct Setting {
   // }
   u_name: string = ''
   u_id: number = 0
-
+  c_id: number = 0
+  m_id: number = 0
+  c_name: string = ''
+  c_des: string = ''
 
 
 
@@ -134,7 +137,15 @@ export default struct Setting {
             // AlertDialog.show({ message: '1'})
 
             router.pushUrl({
-              url: 'pages/mine/PromptPage'
+              url: 'pages/mine/PromptPage',
+              params: {
+                  u_id: this.u_id,
+                  u_name: this.u_name,
+                  c_id: this.c_id,
+                  c_name: this.c_name,
+                  c_des: this.c_des,
+                  m_id: this.m_id
+              }
             })
           })
 

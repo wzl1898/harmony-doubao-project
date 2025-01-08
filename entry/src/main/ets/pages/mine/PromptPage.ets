@@ -13,6 +13,12 @@ interface Prompt extends ValuesBucket {
 @Component
 struct PromptPage {
   private backSrc: string | PixelMap | Resource = $r("app.media.ic_back_black")
+  u_id = (router.getParams() as Record<string, number>)['u_id']
+  u_name = (router.getParams() as Record<string, string>)['u_name']
+  c_id = (router.getParams() as Record<string, number>)['c_id']
+  m_id = (router.getParams() as Record<string, number>)['m_id']
+  c_name = (router.getParams() as Record<string, string>)['c_name']
+  c_des = (router.getParams() as Record<string, string>)['c_des']
 
   promptList: Prompt[] = []
 
@@ -42,7 +48,7 @@ struct PromptPage {
   }
 
   onPageShow(): void {
-    // AlertDialog.show({ message: '1'})
+    AlertDialog.show({ message: this.u_name})
   }
 
   build() {
@@ -57,6 +63,8 @@ struct PromptPage {
             router.pushUrl({
               url: 'pages/Index',
               params: {
+                u_id: this.u_id,
+                u_name: this.u_name,
               }
             })
           })

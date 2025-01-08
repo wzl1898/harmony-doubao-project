@@ -156,6 +156,9 @@ struct Index {
     }
   }
 
+  aboutToAppear(){
+    AlertDialog.show({ message: this.u_name})
+  }
   // async isNew(): number {
   //   const store = await this.getStoreInstance()
   //   const predicates = new relationalStore.RdbPredicates(this.tableName)
@@ -219,7 +222,11 @@ struct Index {
         TabContent() {
           Setting({
             u_id: this.u_id,
-            u_name: this.u_name
+            u_name: this.u_name,
+            c_id: this.c_id,
+            m_id: this.m_id,
+            c_name: this.c_name,
+            c_des: this.c_des
           })
         }
         .tabBar(this.createTabMenu(2))
