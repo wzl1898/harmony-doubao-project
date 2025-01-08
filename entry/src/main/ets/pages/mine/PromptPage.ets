@@ -47,43 +47,162 @@ struct PromptPage {
     return this.store
   }
 
-  onPageShow(): void {
-    AlertDialog.show({ message: this.u_name})
+  async addNew() {
+    // 获取操作数据库的对象
+    const store = await this.getStoreInstance()
+
+    // 添加一条数据
+    const id = await store.insert(this.tableName, {
+      id: null, // 新增时设置 id 为空值 null，用于自增 id
+      u_id: this.u_id,
+      text: this.answer
+    } as Prompt)
+    AlertDialog.show({message: 'new'})
+
+    this.promptList.push({
+      id: id,
+      u_id: this.u_id,
+      text: this.answer
+    })
   }
 
-  build() {
-    Column() {
-      Row() {
-        Image(this.backSrc)
-          .width(22)
-          .height(22)
-          .margin({ left: 15 })
-          .onClick(() => {
-            // router.back()
-            router.pushUrl({
-              url: 'pages/Index',
-              params: {
-                u_id: this.u_id,
-                u_name: this.u_name,
-              }
-            })
-          })
-
-        Text('提示词管理')
-          .fontColor(Color.Black)
-          .fontSize(19)
-          .fontWeight(500)
-          .textAlign(TextAlign.Center)
-      }
-      .height(53)
-      .width("100%")
-      .justifyContent(FlexAlign.SpaceBetween)
+  async aboutToAppear(): Promise<void> {
+    const store = await this.getStoreInstance()
+    const predicates = new relationalStore.RdbPredicates(this.tableName)
+    // predicates.orderByDesc('id') // 倒序(由大到小，常用于排序)
+    predicates.orderByAsc('id')   // 正序(小到大，常用于排序)
+    predicates.equalTo('u_id', this.u_id)    // 等于(常用于详情页)
+    // predicates.in('id', [1, 3, 5]) // 查找多项(常用批量删除)
+    // predicates.like('title', '%哈%') //  模糊匹配(常用于搜索)
+    // 还有很多...
+    // predicates.greaterThan('id', 3)
+    // resultSet 结果集
+    const resultSet = await store.query(predicates)
+    // 准备一个数组，用于存储数据库提取的数据
+    const list: Prompt [] = []
+    // resultSet.goToNextRow()   指针移动到下一行
+    while (resultSet.goToNextRow()) {
+      // 移动指针的时候提取数据，按列下标提取数据
+      list.push({
+        // resultSet.getColumnIndex()        根据列名称获取下标(索引)
+        id: resultSet.getLong(resultSet.getColumnIndex('id')),
+        u_id: resultSet.getLong(resultSet.getColumnIndex('u_id')),
+        text: resultSet.getString(resultSet.getColumnIndex('text'))
+      })
     }
-    .expandSafeArea([SafeAreaType.KEYBOARD])
-    .backgroundColor("#f1f1f1")
-    .zIndex(999)
-    .padding({ top: WindowManager.statusBarHeight })
+    list.forEach(element => {
+      this.promptList.push({
+        id: element.id,
+        u_id: element.u_id,
+        text: element.text
+      })
+    });
+    AlertDialog.show({message: JSON.stringify(list, null, 2)})
+  }
 
+  answer: string = '?'
+  controller: CustomDialogController = new CustomDialogController({
+    builder: TextInputDialog({
+      confirm: (value) => {
+        this.answer = value;
+      }
+    }),
+    alignment: DialogAlignment.Bottom,
+    offset: { dx: 0, dy: -30 }
+  })
 
+  build() {
+    Column(){
+      Column() {
+        Row() {
+          Image(this.backSrc)
+            .width(22)
+            .height(22)
+            .margin({ left: 15 })
+            .onClick(() => {
+              // router.back()
+              router.pushUrl({
+                url: 'pages/Index',
+                params: {
+                  u_id: this.u_id,
+                  u_name: this.u_name,
+                  c_id: 0,
+                  c_des: '',
+                  c_name: '',
+                }
+              })
+            })
+
+          Text('提示词管理')
+            .fontColor(Color.Black)
+            .fontSize(19)
+            .fontWeight(500)
+            .textAlign(TextAlign.Center)
+        }
+        .height(53)
+        .width("100%")
+        .justifyContent(FlexAlign.SpaceBetween)
+      }
+      .expandSafeArea([SafeAreaType.KEYBOARD])
+      .backgroundColor("#f1f1f1")
+      .zIndex(999)
+      .padding({ top: WindowManager.statusBarHeight })
+
+      Button('新建').onClick(() => {
+        // todo 新建太快了
+        this.controller.open()
+        this.addNew()
+      })
+
+      List() {
+        ForEach(this.promptList, (item: Prompt, index: number) => {
+          ListItem(){
+            Row(){
+              Text(item.text)
+                .fontColor(Color.Black)
+                .fontSize(19)
+                .fontWeight(500)
+                .maxLines(1)
+                .textOverflow({ overflow: TextOverflow.Ellipsis })
+                .width("100%")
+
+              Button('删除').onClick(async () => {
+                const store = await this.getStoreInstance()
+                const predicates = new relationalStore.RdbPredicates(this.tableName)
+                predicates.equalTo('id', item.id)
+                const affectedRows = await store.delete(predicates)
+                this.promptList.splice(index, 1)
+              })
+            }.height(80)
+          }
+        })
+      }
+    }
+  }
+}
+@CustomDialog
+struct TextInputDialog {
+  controller: CustomDialogController = new CustomDialogController({ builder: TextInputDialog() })
+  confirm?: (value: string) => void;
+  value: string = '';
+
+  build() {
+    Column({ space: 20 }) {
+      Text('请输入你的提示词')
+      TextInput({ placeholder: '请输入提示词' })
+        .onChange((value) => {
+          this.value = value;
+        })
+      Row({ space: 50 }) {
+        Button('取消')
+          .onClick(() => {
+            this.controller.close();
+          })
+        Button('确认').onClick(() => {
+          if (this.confirm) this.confirm(this.value);
+          this.controller.close();
+        })
+      }
+    }.padding(20)
   }
 }

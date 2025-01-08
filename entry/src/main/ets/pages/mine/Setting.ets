@@ -131,7 +131,6 @@ export default struct Setting {
         .backgroundColor(Color.White)
         .padding({ left: $r('app.float.setting_account_padding') })
         .borderRadius($r('app.float.setting_account_radius'))
-
         Button('管理提示词')
           .onClick(() => {
             // AlertDialog.show({ message: '1'})

@@ -91,6 +91,11 @@ enum PressCancelVoicePostText {
   postText = 3
 }
 
+interface Prompt extends ValuesBucket {
+  id: number | null // 新增时设置 id 为空值 null，用于自增 id
+  u_id: number
+  text: string
+}
 
 interface ChatContent extends ValuesBucket {
   id: number | null // 新增时设置 id 为空值 null，用于自增 id
@@ -251,6 +256,32 @@ export default struct ChatPage {
   @State c_name:string = ''
   @State c_des:string = ''
 
+  promptList: Prompt[] = []
+  tableName_p: string = 'prompt'
+  sqlCreate_p: string = `CREATE TABLE IF NOT EXISTS ${this.tableName_p} (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        u_id INTEGER NOT NULL,
+        text TEXT NOT NULL
+      )`
+  // 操作数据库的管理对象
+  store_p: relationalStore.RdbStore | null = null
+  async getStoreInstance_p() {
+    // 如果已经存在，直接返回
+    if (this.store_p) {
+      return this.store_p
+    }
+    // 获取操作数据库的管理对象(如果数据库文件不存在，会自动创建数据库文件)
+    this.store_p = await relationalStore.getRdbStore(getContext(), {
+      name: 'final.db', // 数据库文件名
+      securityLevel: relationalStore.SecurityLevel.S1, // 数据库安全级别
+    })
+    // 执行创建表的语句 execute 执行
+    this.store_p.executeSql(this.sqlCreate_p)
+    // 返回 store 对象
+    return this.store_p
+  }
+
+
   async getStoreInstance() {
     // 如果已经存在，直接返回
     if (this.store) {
@@ -409,6 +440,38 @@ export default struct ChatPage {
     this.c_name=(this.dataList.length > 0 ) ? this.dataList[0].msg:''
     this.c_des= (this.dataList.length > 0 ) ? this.dataList[1].msg:''
     this.scroller.scrollToIndex(this.dataList.length)
+
+    // prompt
+    const store_p = await this.getStoreInstance_p()
+    const predicates_p = new relationalStore.RdbPredicates(this.tableName_p)
+    // predicates.orderByDesc('id') // 倒序(由大到小，常用于排序)
+    predicates_p.orderByAsc('id')   // 正序(小到大，常用于排序)
+    predicates_p.equalTo('u_id', this.u_id)    // 等于(常用于详情页)
+    // predicates.in('id', [1, 3, 5]) // 查找多项(常用批量删除)
+    // predicates.like('title', '%哈%') //  模糊匹配(常用于搜索)
+    // 还有很多...
+    // predicates.greaterThan('id', 3)
+    // resultSet 结果集
+    const resultSet_p = await store.query(predicates_p)
+    const list_p: Prompt [] = []
+    // resultSet.goToNextRow()   指针移动到下一行
+    while (resultSet_p.goToNextRow()) {
+      // 移动指针的时候提取数据，按列下标提取数据
+      list_p.push({
+        // resultSet.getColumnIndex()        根据列名称获取下标(索引)
+        id: resultSet_p.getLong(resultSet_p.getColumnIndex('id')),
+        u_id: resultSet_p.getLong(resultSet_p.getColumnIndex('u_id')),
+        text: resultSet_p.getString(resultSet_p.getColumnIndex('text'))
+      })
+    }
+    list_p.forEach(element => {
+      this.promptList.push({
+        id: element.id,
+        u_id: element.u_id,
+        text: element.text
+      })
+    });
+    AlertDialog.show({message: JSON.stringify(list_p, null, 2)})
   }
 
   onBackPress() {
@@ -503,6 +566,11 @@ export default struct ChatPage {
       .layoutWeight(1)
 
       Row(){
+        // todo 显示提示词
+        Button('选择提示词').onClick(() => {
+
+        })
+
         Text('如果对回答不满意，可点击')
           .fontSize(12)
           .fontColor(Color.Gray)
@@ -512,7 +580,9 @@ export default struct ChatPage {
           .backgroundColor(Color.Transparent)
           .fontColor(Color.Blue)
           .onClick(() => {
-            this.chatText = '请重新回答:' + this.dataList[this.dataList.length - 2].msg
+            this.chatText = this.dataList[this.dataList.length - 2].msg
+            this.dataList.pop()
+            this.dataList.pop()
             this.sendTextMsg(1)
           })
       }
@@ -674,6 +744,8 @@ export default struct ChatPage {
         else prompt += ('答:' + item.msg)
       })
     }
+    prompt += '本次的问题为：'
+    if (type == 1) prompt+='请重新回答'
 
     this.test_api(prompt + this.chatText, this.m_id)
 
