@@ -20,7 +20,7 @@ export default struct Toolbar {
 
   modelIndex:string[] =[
     '通义千问',
-    '质谱清言'
+    '质谱清言',
   ]
 
   build() {

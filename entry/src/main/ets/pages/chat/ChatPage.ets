@@ -19,6 +19,7 @@ import hilog from '@ohos.hilog';
 import ALiYunResponse from "../../utils/ALiYunResponse"
 import { relationalStore, ValuesBucket} from '@kit.ArkData'
 import { it } from '@ohos/hypium';
+import { HashMap } from '@kit.ArkTS';
 
 enum WXInputType {
   /**
@@ -98,6 +99,13 @@ interface ChatContent extends ValuesBucket {
   self: number
 }
 
+interface aiModel {
+  url: string
+  model: string
+  auth: string
+  // data: object
+}
+
 /**
  * 长按时，手指的坐标
  */
@@ -106,6 +114,37 @@ interface ScreenOffset {
   y: number
   width: number
   height: number
+}
+
+
+// 定义 message 内的结构
+interface Message {
+  content: string;
+  role: string;
+}
+
+// 定义 choices 数组内的对象结构
+interface Choice {
+  finish_reason: string;
+  index: number;
+  message: Message;
+}
+
+// 定义 usage 的结构
+interface Usage {
+  completion_tokens: number;
+  prompt_tokens: number;
+  total_tokens: number;
+}
+
+// 整体的接口
+interface ZhiPuResponse {
+  choices: Choice[];
+  created: number;
+  id: string;
+  model: string;
+  request_id: string;
+  usage: Usage;
 }
 
 @Entry
@@ -557,89 +596,195 @@ export default struct ChatPage {
       })
     }
 
-    this.test_api(prompt + this.chatText)
+    this.test_api(prompt + this.chatText, this.m_id)
 
     this.scroller.scrollToIndex(this.dataList.length)
     this.chatText = ""
   }
 
-  private test_api(question: string){
+  private test_api(question: string, m_id: number){
     hilog.error(0x0000, 'testTag', 'testing_api:', question);
     // 1 createHttp接口创建请求
     let httpRequest = http.createHttp();
 
-    // 2 发起请求
-    httpRequest.request(
-      // 请求地址
-      "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation",
-      // 请求options: HttpRequestOptions
+    let qwenUrl = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation"
+    let zhipuUrl = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
+    let zhipuModel = "glm-4-plus"
+    let qwenModel = "qwen-plus"
+    let qwenAuth = "sk-d3af13a4247e4082b8db7818e8c1e9b8"
+    let zhipuAuth = "Bearer a1c79d3f1a0841bc911b26c48eb4814d.N5S1h82NsnZHAPdB"
+
+    const ais: aiModel[] = [
       {
-        // 请求方式
-        method: http.RequestMethod.POST,
-        // 请求头
-        header: {
-          "Content-Type": "application/json",
-          // 这里的Authorization 就是刚才工作台查看的 API-KEY
-          "Authorization": "sk-d3af13a4247e4082b8db7818e8c1e9b8" // 脱敏处理
-        },
-        // 请求体
-        extraData: {
-          "model": "qwen-plus", // 指定用于对话的通义千问模型名
-          "input": {
-            "messages": [
-              {
-                "role": "user",
-                "content": question // 请求发起方传入的问题
-              }
-            ]
-          }
-        }
-      }, async (err, data: http.HttpResponse) => {
-      if (err) {
-        hilog.error(0x0000, 'testTag', 'Failed to request ALiYun. Cause: %{public}s', JSON.stringify(err) ?? '');
-        httpRequest.destroy();
-      } else {
-        hilog.error(0x0000, 'testTag', 'Request ALiYun success. data: %{public}s', JSON.stringify(data.result));
-        httpRequest.destroy();
-        let resp: ALiYunResponse = JSON.parse(data.result.toString())
-        hilog.error(0x0000, 'testTag', 'data.result.text: %{public}', resp.output.text)
-        // this.chatList.push({ headSrc: $r("app.media.ic_user_head7"),
-        //   nickname: "老弟",
-        //   content: question,
-        //   time: "周一" })
-        // const chat = new ChatMessage(MessageType.text, res);
-
-
-        let answer : string = ''
-        answer = resp.output.text
-
-        //TODO: save the AI response message to database
-        // 获取操作数据库的对象
-        const store = await this.getStoreInstance()
-        console.log("1")
-        // 添加一条数据
-        const id = await store.insert(this.tableName, {
-          id: null, // 新增时设置 id 为空值 null，用于自增 id
-          c_id: this.c_id,
-          msg: answer,
-          self: 0
-        } as ChatContent)
-
-        this.dataList.push({
-          name: "鲁班",
-          headSrc: $r("app.media.ic_user_head7"),
-          msgType: 0,
-          self: false,
-          msg: answer,
-        })
-
-        if (this.dataList.length == 2) {
-          this.c_des = resp.output.text
-        }
-
-        this.scroller.scrollToIndex(this.dataList.length)
+        url: qwenUrl,
+        model: qwenModel,
+        auth: qwenAuth,
+        // data: {}
+      },
+      {
+        url: zhipuUrl,
+        model:zhipuModel,
+        auth: zhipuAuth,
+        // data: {}
       }
-    })
+    ]
+
+    let auth = qwenAuth
+    let url = qwenUrl
+    let model = qwenModel
+    // let qwendata = {
+    //   "model": ais[m_id].model,
+    //   "input": {
+    //     "messages": [{
+    //       "role": "user",
+    //       "content": question // 请求发起方传入的问题
+    //     }]
+    //   }
+    // }
+    if (m_id == 0){
+      httpRequest.request(
+        // 请求地址
+        ais[m_id].url,
+        // 请求options: HttpRequestOptions
+        {
+          // 请求方式
+          method: http.RequestMethod.POST,
+          // 请求头
+          header: {
+            "Content-Type": "application/json",
+            // 这里的Authorization 就是刚才工作台查看的 API-KEY
+            "Authorization": ais[m_id].auth // 脱敏处理
+          },
+          // 请求体
+          extraData: {
+              "model": ais[m_id].model,
+              "input": {
+                "messages": [{
+                  "role": "user",
+                  "content": question // 请求发起方传入的问题
+                }]
+              }
+            }
+        }, async (err, data: http.HttpResponse) => {
+        if (err) {
+          hilog.error(0x0000, 'testTag', 'Failed to request ALiYun. Cause: %{public}s', JSON.stringify(err) ?? '');
+          httpRequest.destroy();
+        } else {
+          hilog.error(0x0000, 'testTag', 'Request ALiYun success. data: %{public}s', JSON.stringify(data.result));
+          httpRequest.destroy();
+          let resp: ALiYunResponse = JSON.parse(data.result.toString())
+          hilog.error(0x0000, 'testTag', 'data.result.text: %{public}', resp.output.text)
+          // this.chatList.push({ headSrc: $r("app.media.ic_user_head7"),
+          //   nickname: "老弟",
+          //   content: question,
+          //   time: "周一" })
+          // const chat = new ChatMessage(MessageType.text, res);
+
+
+          let answer : string = ''
+          answer = resp.output.text
+
+          //TODO: save the AI response message to database
+          // 获取操作数据库的对象
+          const store = await this.getStoreInstance()
+          console.log("1")
+          // 添加一条数据
+          const id = await store.insert(this.tableName, {
+            id: null, // 新增时设置 id 为空值 null，用于自增 id
+            c_id: this.c_id,
+            msg: answer,
+            self: 0
+          } as ChatContent)
+
+          this.dataList.push({
+            name: "鲁班",
+            headSrc: $r("app.media.ic_user_head7"),
+            msgType: 0,
+            self: false,
+            msg: answer,
+          })
+
+          if (this.dataList.length == 2) {
+            this.c_des = resp.output.text
+          }
+
+          this.scroller.scrollToIndex(this.dataList.length)
+        }
+      })
+    }else if (m_id == 1){
+      hilog.error(0x0000, 'testTag', 'm_id == 1');
+      hilog.error(0x0000, 'testTag', 'url: %{public}s', ais[m_id].url);
+      httpRequest.request(
+        // 请求地址
+        ais[m_id].url,
+        // 请求options: HttpRequestOptions
+        {
+          // 请求方式
+          method: http.RequestMethod.POST,
+          // 请求头
+          header: {
+            "Content-Type": "application/json",
+            // 这里的Authorization 就是刚才工作台查看的 API-KEY
+            "Authorization": ais[m_id].auth // 脱敏处理
+          },
+          // 请求体
+          extraData: {
+            "model": ais[m_id].model, // 指定用于对话的通义千问模型名
+            // ais[m_id].inputName: ais[m_id].inputBody,
+            "messages": [{
+              "role": "user",
+              "content": question // 请求发起方传入的问题
+            }]
+
+          }
+        }, async (err, data: http.HttpResponse) => {
+        if (err) {
+          hilog.error(0x0000, 'testTag', 'Failed to request ALiYun. Cause: %{public}s', JSON.stringify(err) ?? '');
+          httpRequest.destroy();
+        } else {
+          hilog.error(0x0000, 'testTag', 'Request ALiYun success. data: %{public}s', JSON.stringify(data.result));
+          httpRequest.destroy();
+          let resp: ZhiPuResponse = JSON.parse(data.result.toString())
+          hilog.error(0x0000, 'testTag', 'data.result.text: %{public}', resp.choices[0].message.content)
+          // this.chatList.push({ headSrc: $r("app.media.ic_user_head7"),
+          //   nickname: "老弟",
+          //   content: question,
+          //   time: "周一" })
+          // const chat = new ChatMessage(MessageType.text, res);
+
+
+          let answer : string = ''
+          answer = resp.choices[0].message.content
+
+          //TODO: save the AI response message to database
+          // 获取操作数据库的对象
+          const store = await this.getStoreInstance()
+          console.log("1")
+          // 添加一条数据
+          const id = await store.insert(this.tableName, {
+            id: null, // 新增时设置 id 为空值 null，用于自增 id
+            c_id: this.c_id,
+            msg: answer,
+            self: 0
+          } as ChatContent)
+
+          this.dataList.push({
+            name: "鲁班",
+            headSrc: $r("app.media.ic_user_head7"),
+            msgType: 0,
+            self: false,
+            msg: answer,
+          })
+
+          if (this.dataList.length == 2) {
+            this.c_des = resp.choices[0].message.content
+          }
+
+          this.scroller.scrollToIndex(this.dataList.length)
+        }
+      })
+    }
+
   }
 
   async getData() {

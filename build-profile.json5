@@ -31,34 +31,21 @@
         "name": "release"
       }
     ],
-    "signingConfigs": [
-      {
-        "name": "default",
-        "type": "HarmonyOS",
-        "material": {
-          "certpath": "C:/Users/小培/.ohos/config/default_harmony-doubao-project_LKzFsJWxZ3cbNy9tMuW__qcZWrARvmQfbpkSeSXCYM8=.cer",
-          "storePassword": "0000001BA2DE7744F9833BBA0A193802BA1A31AD850867DC6BEBD863C07DFE144DFAE072BE13938000EF23",
-          "keyAlias": "debugKey",
-          "keyPassword": "0000001B6E2CD065FE74BADEA4F6BF81B783FFC48A83B76CCC92A32A7D4CE077DE415F72E5D63E600C40A3",
-          "profile": "C:/Users/小培/.ohos/config/default_harmony-doubao-project_LKzFsJWxZ3cbNy9tMuW__qcZWrARvmQfbpkSeSXCYM8=.p7b",
-          "signAlg": "SHA256withECDSA",
-          "storeFile": "C:/Users/小培/.ohos/config/default_harmony-doubao-project_LKzFsJWxZ3cbNy9tMuW__qcZWrARvmQfbpkSeSXCYM8=.p12"
-        }
-      },
-      {
-        "name": "new",
-        "type": "HarmonyOS",
-        "material": {
-          "certpath": "C:\\Users\\小培\\.ohos\\config\\new_harmony-doubao-project_LKzFsJWxZ3cbNy9tMuW__qcZWrARvmQfbpkSeSXCYM8=.cer",
-          "storePassword": "0000001A0F0F3E681847CF00337D08CDC2725CA6D1BE8057AAAC8F31E2FA54EA2C0E084BA13FC2B012AB",
-          "keyAlias": "debugKey",
-          "keyPassword": "0000001A1E43B3E8F66700C6495DA8C5D72C17D9209A490D8E0236DB9586A49C77C307D83CAB657B7FCC",
-          "profile": "C:\\Users\\小培\\.ohos\\config\\new_harmony-doubao-project_LKzFsJWxZ3cbNy9tMuW__qcZWrARvmQfbpkSeSXCYM8=.p7b",
-          "signAlg": "SHA256withECDSA",
-          "storeFile": "C:\\Users\\小培\\.ohos\\config\\new_harmony-doubao-project_LKzFsJWxZ3cbNy9tMuW__qcZWrARvmQfbpkSeSXCYM8=.p12"
-        }
-      }
-    ]
+//    "signingConfigs": [
+//      {
+//        "name": "default",
+//        "type": "HarmonyOS",
+//        "material": {
+//          "certpath": "C:\\Users\\吴子隆\\.ohos\\config\\default_harmony-doubao-project_jJum_CcwmsXz5YEeRUhQ-AqQiTdP664VDMfW0ZWrV1g=.cer",
+//          "storePassword": "000000199100A1D4ACD4AE5398E4362CB23652A77C34DBBAD11A70C45F00FD16BF860579D6134D9D1A",
+//          "keyAlias": "debugKey",
+//          "keyPassword": "000000195C75DA3FBBDAD47FF84CFC5A48D00A50DBF14760A6670B8DF4AB089D82F9DD6AEA3D5AA142",
+//          "profile": "C:\\Users\\吴子隆\\.ohos\\config\\default_harmony-doubao-project_jJum_CcwmsXz5YEeRUhQ-AqQiTdP664VDMfW0ZWrV1g=.p7b",
+//          "signAlg": "SHA256withECDSA",
+//          "storeFile": "C:\\Users\\吴子隆\\.ohos\\config\\default_harmony-doubao-project_jJum_CcwmsXz5YEeRUhQ-AqQiTdP664VDMfW0ZWrV1g=.p12"
+//        }
+//      }
+//    ]
   },
   "modules": [
     {
