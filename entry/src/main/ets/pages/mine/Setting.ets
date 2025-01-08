@@ -131,10 +131,10 @@ export default struct Setting {
 
         Button('管理提示词')
           .onClick(() => {
-            //AlertDialog.show({ message: '1'})
+            // AlertDialog.show({ message: '1'})
 
             router.pushUrl({
-              url: './PromptPage'
+              url: 'pages/mine/PromptPage'
             })
           })
 

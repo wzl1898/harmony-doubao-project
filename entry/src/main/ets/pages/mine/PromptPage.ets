@@ -42,7 +42,7 @@ struct PromptPage {
   }
 
   onPageShow(): void {
-    AlertDialog.show({ message: '1'})
+    // AlertDialog.show({ message: '1'})
   }
 
   build() {
@@ -65,6 +65,7 @@ struct PromptPage {
           .fontColor(Color.Black)
           .fontSize(19)
           .fontWeight(500)
+          .textAlign(TextAlign.Center)
       }
       .height(53)
       .width("100%")
