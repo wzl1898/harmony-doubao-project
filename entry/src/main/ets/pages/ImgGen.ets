@@ -87,9 +87,13 @@ interface SucResponse {
 @Component
 export default struct ImgGen {
   @State text:string = ""
+  @State style:string = "素描"
   private controller: TextAreaController = new TextAreaController()
   @State imgUrl: string= ""
   @State textAreaEnabled:boolean = true
+  @State selectedIndex:number = -1
+  @State promptList: string[] = ["<photography>", "<portrait>", "<3d cartoon>","<anime>","<oil painting>" ,"<watercolor>","<sketch>" ,"<chinese painting>","<flat illustration>","<auto>" ]
+  znList: string[] = ["摄影", '人像写真', '3D卡通', '动画', '油画', '水彩', '素描', '中国画', '扁平插画', '默认']
 
   ask(task_id:string){
     let askHttpRequest = http.createHttp();
@@ -152,7 +156,12 @@ export default struct ImgGen {
           "model": "wanx-v1",
           "input": {
             "prompt": this.text
+          },
+          "parameters":{
+            "style": this.promptList[this.selectedIndex]
+            // "style": "<sketch>"
           }
+
         }
       }, async (err, data: http.HttpResponse) => {
       if (err) {
@@ -180,7 +189,32 @@ export default struct ImgGen {
           .width("100%")
       }
 
+      Row(){
+        Text("当前风格："+(this.selectedIndex == -1 ? "无风格": this.znList[this.selectedIndex]))
+          .fontSize(12)
+          .fontColor(Color.Gray)
+          .textOverflow({overflow:TextOverflow.Ellipsis})
+        Button('选择风格').onClick(() => {
+          TextPickerDialog.show({
+            range: this.znList, //设置文本选择器的选择范围
+            selected: this.selectedIndex, //设置选中的索引
+            onAccept: (value: TextPickerResult) => { //确定按钮的回调函数
+              this.selectedIndex = Number(value.index.toString()).valueOf();
 
+            },
+            onCancel: () => { //取消按钮的回调函数
+              console.info('取消选择')
+            },
+            onChange: (value: TextPickerResult) => { //选择器选中内容发生变化时触发的回调函数
+              console.info(`当前风格:${JSON.stringify(value)}`)
+            }
+          })
+        })
+          .enabled(this.promptList.length > 0)
+          .fontSize(12)
+          .backgroundColor(Color.Transparent)
+          .fontColor(Color.Blue)
+      }.height("3%")
 
       Row() {
 
@@ -260,7 +294,7 @@ export default struct ImgGen {
       .padding({ top: 10, bottom: 10 })
       .alignItems(VerticalAlign.Bottom)
       .backgroundColor("#f9f9f9")
-      .height("10%")
+      .height("7%")
 
       Divider()
         .vertical(false)
