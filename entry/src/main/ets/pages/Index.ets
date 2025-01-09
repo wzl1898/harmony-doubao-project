@@ -157,7 +157,7 @@ struct Index {
   }
 
   aboutToAppear(){
-    AlertDialog.show({ message: this.u_name})
+    // AlertDialog.show({ message: this.u_name})
   }
   // async isNew(): number {
   //   const store = await this.getStoreInstance()

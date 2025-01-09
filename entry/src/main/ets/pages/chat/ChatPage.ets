@@ -256,7 +256,8 @@ export default struct ChatPage {
   @State c_name:string = ''
   @State c_des:string = ''
 
-  promptList: Prompt[] = []
+  @State promptList: Prompt[] = []
+  @State promptTextList: string[] = []
   tableName_p: string = 'prompt'
   sqlCreate_p: string = `CREATE TABLE IF NOT EXISTS ${this.tableName_p} (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -299,6 +300,8 @@ export default struct ChatPage {
   }
 
   @State private dataList: ChatContentItemData[] = [ ]
+
+  @State selectedIndex: number = -1
   // 输入框内容
   @State
   textValue: string = ""
@@ -393,7 +396,6 @@ export default struct ChatPage {
   @State m_id: number = (router.getParams() as Record<string,number>) ['m_id'];
   @State u_name: string = (router.getParams() as Record<string,string>) ['u_name'];
   async aboutToAppear() {
-    //AlertDialog.show({ message: 'chat page userid: ' + this.u_id +',  name:'+ this.u_name})
 
     // this.name = (router.getParams() as ChatPageParam).name
     this.name = "豆包"
@@ -470,8 +472,9 @@ export default struct ChatPage {
         u_id: element.u_id,
         text: element.text
       })
+      this.promptTextList.push(element.text)
     });
-    AlertDialog.show({message: JSON.stringify(list_p, null, 2)})
+    AlertDialog.show({message: this.promptList.length.toString()})
   }
 
   onBackPress() {
@@ -566,10 +569,37 @@ export default struct ChatPage {
       .layoutWeight(1)
 
       Row(){
+        Text(this.selectedIndex == -1 ? "无提示词": this.promptTextList[this.selectedIndex])
+          .fontSize(12)
+          .fontColor(Color.Gray)
+          .textOverflow({overflow:TextOverflow.Ellipsis})
         // todo 显示提示词
         Button('选择提示词').onClick(() => {
+          TextPickerDialog.show({
+            range: this.promptTextList, //设置文本选择器的选择范围
+            selected: this.selectedIndex, //设置选中的索引
+            onAccept: (value: TextPickerResult) => { //确定按钮的回调函数
+              this.selectedIndex = Number(value.index.toString()).valueOf();
 
+            },
+            onCancel: () => { //取消按钮的回调函数
+              console.info('取消选择')
+            },
+            onChange: (value: TextPickerResult) => { //选择器选中内容发生变化时触发的回调函数
+              console.info(`当前文本:${JSON.stringify(value)}`)
+            }
+          })
         })
+          .enabled(this.promptList.length > 0)
+          .fontSize(12)
+          .backgroundColor(Color.Transparent)
+          .fontColor(Color.Blue)
+
+
+
+      }
+      Row(){
+
 
         Text('如果对回答不满意，可点击')
           .fontSize(12)
@@ -586,6 +616,7 @@ export default struct ChatPage {
             this.sendTextMsg(1)
           })
       }
+
       Row() {
 
         if (this.inputType == WXInputType.keyboard) {
@@ -820,10 +851,12 @@ export default struct ChatPage {
           extraData: {
               "model": ais[m_id].model,
               "input": {
-                "messages": [{
+                "messages": [{'role': 'system', 'content': this.selectedIndex == -1 ? "": this.promptTextList[this.selectedIndex]},
+                  {
                   "role": "user",
                   "content": question // 请求发起方传入的问题
-                }]
+                  }
+                ]
               }
             }
         }, async (err, data: http.HttpResponse) => {
@@ -893,7 +926,7 @@ export default struct ChatPage {
           extraData: {
             "model": ais[m_id].model, // 指定用于对话的通义千问模型名
             // ais[m_id].inputName: ais[m_id].inputBody,
-            "messages": [{
+            "messages": [{'role': 'system', 'content': this.selectedIndex == -1 ? "": this.promptTextList[this.selectedIndex]},{
               "role": "user",
               "content": question // 请求发起方传入的问题
             }]
@@ -966,7 +999,7 @@ export default struct ChatPage {
           extraData: {
             "app_id": "75bd3865-a1e8-4bc8-9504-3550be3b4736",
             // ais[m_id].inputName: ais[m_id].inputBody,
-            "query": question,
+            "query": (this.selectedIndex == -1 ? "": this.promptTextList[this.selectedIndex]) + question,
             "conversation_id": "56e9e41f-9c2b-4513-aad5-0751775b5b27",
             "stream": false
           }
@@ -1039,7 +1072,7 @@ export default struct ChatPage {
             "messages": [
               {
                 "role": "system",
-                "content": "你是 Kimi，由 Moonshot AI 提供的人工智能助手，你更擅长中文和英文的对话。用户输入中会包含上下文，需要考虑上下文来对用户最后的问题做出回答。"
+                "content": "现在" + (this.selectedIndex == -1 ? "": this.promptTextList[this.selectedIndex]) + "，用户输入中会包含上下文，需要考虑上下文来对用户最后的问题做出回答。"
               },
               {
                 "role": "user",

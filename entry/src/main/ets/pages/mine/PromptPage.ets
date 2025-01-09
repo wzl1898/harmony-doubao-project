@@ -19,7 +19,7 @@ struct PromptPage {
   m_id = (router.getParams() as Record<string, number>)['m_id']
   c_name = (router.getParams() as Record<string, string>)['c_name']
   c_des = (router.getParams() as Record<string, string>)['c_des']
-
+  @State
   promptList: Prompt[] = []
 
   tableName: string = 'prompt'
@@ -57,7 +57,7 @@ struct PromptPage {
       u_id: this.u_id,
       text: this.answer
     } as Prompt)
-    AlertDialog.show({message: 'new'})
+    // AlertDialog.show({message: this.answer})
 
     this.promptList.push({
       id: id,
@@ -96,8 +96,9 @@ struct PromptPage {
         u_id: element.u_id,
         text: element.text
       })
+      // AlertDialog.show({message: element.text})
     });
-    AlertDialog.show({message: JSON.stringify(list, null, 2)})
+    // AlertDialog.show({message: JSON.stringify(list, null, 2)})
   }
 
   answer: string = '?'
@@ -105,11 +106,26 @@ struct PromptPage {
     builder: TextInputDialog({
       confirm: (value) => {
         this.answer = value;
+        this.addNew()
       }
     }),
     alignment: DialogAlignment.Bottom,
     offset: { dx: 0, dy: -30 }
   })
+
+  @Builder DeleteButton(id: number, index:number){
+    Button('删除',{ type: ButtonType.Normal}).onClick(async () => {
+      const store = await this.getStoreInstance()
+      const predicates = new relationalStore.RdbPredicates(this.tableName)
+      predicates.equalTo('id', id)
+      const affectedRows = await store.delete(predicates)
+      this.promptList.splice(index, 1)
+    })
+      .width(80)
+      .backgroundColor(Color.Red)
+      .borderRadius(0)
+      .height("100%")
+  }
 
   build() {
     Column(){
@@ -132,12 +148,20 @@ struct PromptPage {
                 }
               })
             })
+            // .alignSelf(ItemAlign.Start)
+
 
           Text('提示词管理')
             .fontColor(Color.Black)
             .fontSize(19)
             .fontWeight(500)
-            .textAlign(TextAlign.Center)
+            // .alignSelf(ItemAlign.Center)
+            // .textAlign(TextAlign.Center)
+          Text('')
+            .fontColor(Color.Black)
+            .fontSize(19)
+            .fontWeight(500)
+            .alignSelf(ItemAlign.Center)
         }
         .height(53)
         .width("100%")
@@ -151,9 +175,19 @@ struct PromptPage {
       Button('新建').onClick(() => {
         // todo 新建太快了
         this.controller.open()
-        this.addNew()
+        // this.addNew()
       })
-
+        .margin(10)
+        .width("30%")
+        .fontSize(25)
+      // List(){
+      //   ListItem(){
+      //     Text("this.promptList[0].text")
+      //       .fontColor(Color.Black)
+      //       .fontSize(19)
+      //       .fontWeight(500)
+      //   }
+      // }
       List() {
         ForEach(this.promptList, (item: Prompt, index: number) => {
           ListItem(){
@@ -165,21 +199,28 @@ struct PromptPage {
                 .maxLines(1)
                 .textOverflow({ overflow: TextOverflow.Ellipsis })
                 .width("100%")
+                .padding(10)
 
-              Button('删除').onClick(async () => {
-                const store = await this.getStoreInstance()
-                const predicates = new relationalStore.RdbPredicates(this.tableName)
-                predicates.equalTo('id', item.id)
-                const affectedRows = await store.delete(predicates)
-                this.promptList.splice(index, 1)
-              })
-            }.height(80)
+
+
+            }.height(60)
           }
+          .swipeAction({ end: this.DeleteButton(item.id, index) })
+          .backgroundColor("#fffafafa")
         })
       }
+        .divider({
+          strokeWidth: 0.8,
+          color: '#f0f0f0',
+          startMargin: 90,
+          endMargin: 0
+        }) // 每行之间的分界线
     }
   }
 }
+
+
+
 @CustomDialog
 struct TextInputDialog {
   controller: CustomDialogController = new CustomDialogController({ builder: TextInputDialog() })
