@@ -474,7 +474,7 @@ export default struct ChatPage {
       })
       this.promptTextList.push(element.text)
     });
-    AlertDialog.show({message: this.promptList.length.toString()})
+    // AlertDialog.show({message: this.promptList.length.toString()})
   }
 
   onBackPress() {
@@ -1156,7 +1156,7 @@ export default struct ChatPage {
       })
     }
     // 循环结束后，获取所有数据
-    AlertDialog.show({ message: JSON.stringify(list, null, 2) })
+    // AlertDialog.show({ message: JSON.stringify(list, null, 2) })
   }
 
   private showFuncBarWithAnim(show: boolean) {
