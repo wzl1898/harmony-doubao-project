@@ -23,14 +23,14 @@ export default struct WechatToolbar {
           //   .onClick(() => {
           //     router.pushUrl({ url: 'pages/search/SearchPage' })
           //   })
-          // Image($r('app.media.ic_add'))
-          //   .width(25)
-          //   .height(25)
-          //   .margin({ right: 18 })
-          //   .onClick(() => {
-          //     prompt.showToast({ message: "功能正在开发中...", duration: 2000 })
-          //     router.pushUrl({ url: 'pages/HardwareIndexPage' })
-          //   })
+          Image($r('app.media.ic_add'))
+            .width(25)
+            .height(25)
+            .margin({ right: 18 })
+            .onClick(() => {
+              // prompt.showToast({ message: "功能正在开发中...", duration: 2000 })
+              router.pushUrl({ url: 'pages/ImgGen' })
+            })
         }
         .height("100%")
         .width("100%")
