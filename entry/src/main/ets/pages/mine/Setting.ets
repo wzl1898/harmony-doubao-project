@@ -147,7 +147,22 @@ export default struct Setting {
               }
             })
           })
-
+        // Button('新增模型')
+        //   .onClick(() => {
+        //     // AlertDialog.show({ message: '1'})
+        //
+        //     router.pushUrl({
+        //       url: 'pages/mine/AddModel',
+        //       params: {
+        //         u_id: this.u_id,
+        //         u_name: this.u_name,
+        //         c_id: this.c_id,
+        //         c_name: this.c_name,
+        //         c_des: this.c_des,
+        //         m_id: this.m_id
+        //       }
+        //     })
+        //   })
 
         // List() {
         //   ForEach(mainViewModel.getSettingListData(), (item: ItemData) => {

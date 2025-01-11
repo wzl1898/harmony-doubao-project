@@ -1,7 +1,7 @@
 {
   "app": {
-    "bundleName": "cn.icheny.wechat",
-//    "bundleName": "com.doubao.ai",
+//    "bundleName": "cn.icheny.wechat",
+    "bundleName": "com.doubao.ai",
     "vendor": "example",
     "versionCode": 1000000,
     "versionName": "1.0.0",

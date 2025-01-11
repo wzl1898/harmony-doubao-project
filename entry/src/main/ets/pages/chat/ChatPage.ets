@@ -259,6 +259,14 @@ export default struct ChatPage {
   @State promptList: Prompt[] = []
   @State promptTextList: string[] = []
   tableName_p: string = 'prompt'
+  tableName1: string = 'BigModel'
+  sqlCreate1: string = `CREATE TABLE IF NOT EXISTS ${this.tableName1} (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        u_id INTEGER NOT NULL,
+        url TEXT NOT NULL,
+        modelname TEXT NOT NULL,
+        auth TEXT NOT NULL
+      )`
   sqlCreate_p: string = `CREATE TABLE IF NOT EXISTS ${this.tableName_p} (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         u_id INTEGER NOT NULL,
@@ -266,6 +274,7 @@ export default struct ChatPage {
       )`
   // 操作数据库的管理对象
   store_p: relationalStore.RdbStore | null = null
+  store1: relationalStore.RdbStore | null = null
   async getStoreInstance_p() {
     // 如果已经存在，直接返回
     if (this.store_p) {
@@ -280,6 +289,21 @@ export default struct ChatPage {
     this.store_p.executeSql(this.sqlCreate_p)
     // 返回 store 对象
     return this.store_p
+  }
+  async getStoreInstance1() {
+    // 如果已经存在，直接返回
+    if (this.store1) {
+      return this.store1
+    }
+    // 获取操作数据库的管理对象(如果数据库文件不存在，会自动创建数据库文件)
+    this.store1 = await relationalStore.getRdbStore(getContext(), {
+      name: 'final.db', // 数据库文件名
+      securityLevel: relationalStore.SecurityLevel.S1, // 数据库安全级别
+    })
+    // 执行创建表的语句 execute 执行
+    this.store1.executeSql(this.sqlCreate_p)
+    // 返回 store 对象
+    return this.store1
   }
 
 
@@ -300,7 +324,30 @@ export default struct ChatPage {
   }
 
   @State private dataList: ChatContentItemData[] = [ ]
-
+  @State ais: aiModel[] = [
+  {
+    url: "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation",
+    model: "qwen-plus",
+    auth: "sk-d3af13a4247e4082b8db7818e8c1e9b8",
+    // data: {}
+  },
+  {
+    url: "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+    model:"glm-4-plus",
+    auth: "Bearer a1c79d3f1a0841bc911b26c48eb4814d.N5S1h82NsnZHAPdB",
+    // data: {}
+  },
+  {
+    url: "https://qianfan.baidubce.com/v2/app/conversation/runs",
+    model: "75bd3865-a1e8-4bc8-9504-3550be3b4736",
+    auth: "Bearer bce-v3/ALTAK-y3mcnHrYzxTp0gxF2ASDk/5bf67a0c8f595e2ca042beb4f7b70bec683890e9"
+  },
+  {
+    url: "https://api.moonshot.cn/v1/chat/completions",
+    model: "moonshot-v1-8k",
+    auth: "Bearer sk-UgqVHwbSdK0Gfu1ER9VoAZqyGd9u2SZECqxMVXjsOaP1p6RA"
+  },
+]
   @State selectedIndex: number = -1
   // 输入框内容
   @State
@@ -396,7 +443,7 @@ export default struct ChatPage {
   @State m_id: number = (router.getParams() as Record<string,number>) ['m_id'];
   @State u_name: string = (router.getParams() as Record<string,string>) ['u_name'];
   async aboutToAppear() {
-
+    hilog.error(0x0000, 'testTag', '1');
     // this.name = (router.getParams() as ChatPageParam).name
     this.name = "豆包"
     await window.getLastWindow(getContext(this)).then(currentWindow => {
@@ -442,7 +489,7 @@ export default struct ChatPage {
     this.c_name=(this.dataList.length > 0 ) ? this.dataList[0].msg:''
     this.c_des= (this.dataList.length > 0 ) ? this.dataList[1].msg:''
     this.scroller.scrollToIndex(this.dataList.length)
-
+    hilog.error(0x0000, 'testTag', '2');
     // prompt
     const store_p = await this.getStoreInstance_p()
     const predicates_p = new relationalStore.RdbPredicates(this.tableName_p)
@@ -474,6 +521,45 @@ export default struct ChatPage {
       })
       this.promptTextList.push(element.text)
     });
+    hilog.error(0x0000, 'testTag', '3');
+    const store1 = await this.getStoreInstance()
+    const predicates1 = new relationalStore.RdbPredicates(this.tableName1)
+    // predicates.orderByDesc('id') // 倒序(由大到小，常用于排序)
+    predicates1.orderByAsc('id')   // 正序(小到大，常用于排序)
+    predicates1.equalTo('u_id', this.u_id)    // 等于(常用于详情页)
+    // predicates.in('id', [1, 3, 5]) // 查找多项(常用批量删除)
+    // predicates.like('title', '%哈%') //  模糊匹配(常用于搜索)
+    // 还有很多...
+    // predicates.greaterThan('id', 3)
+    // resultSet 结果集
+    const resultSet1 = await store.query(predicates1)
+    // 准备一个数组，用于存储数据库提取的数据
+    const list1: aiModel [] = []
+    hilog.error(0x0000, 'testTag', '4');
+    // resultSet.goToNextRow()   指针移动到下一行
+    while (resultSet1.goToNextRow()) {
+      // 移动指针的时候提取数据，按列下标提取数据
+      list1.push({
+        // resultSet.getColumnIndex()        根据列名称获取下标(索引)
+        // id: resultSet1.getLong(resultSet1.getColumnIndex('id')),
+        // u_id: resultSet1.getLong(resultSet1.getColumnIndex('u_id')),
+        url: resultSet1.getString(resultSet1.getColumnIndex('url')),
+        model: resultSet1.getString(resultSet1.getColumnIndex('modelname')),
+        auth: resultSet1.getString(resultSet1.getColumnIndex('auth'))
+      })
+    }
+    hilog.error(0x0000, 'testTag', '5');
+    hilog.error(0x0000, 'testTag', 'list1.length: %{public}s', list1.length);
+    list1.forEach(element => {
+      this.ais.push({
+        url: element.url,
+        model: element.model,
+        auth: element.auth
+      })
+      // AlertDialog.show({message: element.text})
+    });
+
+
     // AlertDialog.show({message: this.promptList.length.toString()})
   }
 
@@ -548,6 +634,7 @@ export default struct ChatPage {
         c_name: $c_name,
         c_des: $c_des,
         m_id: $m_id,
+        ais: this.ais
       })
       List({ space: 20, initialIndex: this.dataList.length - 1, scroller: this.scroller }) {
         ForEach(this.dataList, (item: ChatContentItemData) => {
@@ -567,6 +654,18 @@ export default struct ChatPage {
       .height(0)
       // .divider({ strokeWidth: 0.8, color: '#f0f0f0', startMargin: 90, endMargin: 0 }) // 每行之间的分界线
       .layoutWeight(1)
+
+
+
+
+      // Row(){
+      //   Button("xians")
+      //     .onClick(()=>{
+      //       AlertDialog.show({message: JSON.stringify(this.ais)})
+      //     })
+      // }
+
+
 
       Row(){
         Text(this.selectedIndex == -1 ? "无提示词": this.promptTextList[this.selectedIndex])
@@ -796,30 +895,7 @@ export default struct ChatPage {
     let qwenAuth = "sk-d3af13a4247e4082b8db7818e8c1e9b8"
     let zhipuAuth = "Bearer a1c79d3f1a0841bc911b26c48eb4814d.N5S1h82NsnZHAPdB"
 
-    const ais: aiModel[] = [
-      {
-        url: qwenUrl,
-        model: qwenModel,
-        auth: qwenAuth,
-        // data: {}
-      },
-      {
-        url: zhipuUrl,
-        model:zhipuModel,
-        auth: zhipuAuth,
-        // data: {}
-      },
-      {
-        url: "https://qianfan.baidubce.com/v2/app/conversation/runs",
-        model: "75bd3865-a1e8-4bc8-9504-3550be3b4736",
-        auth: "Bearer bce-v3/ALTAK-y3mcnHrYzxTp0gxF2ASDk/5bf67a0c8f595e2ca042beb4f7b70bec683890e9"
-      },
-      {
-        url: "https://api.moonshot.cn/v1/chat/completions",
-        model: "moonshot-v1-8k",
-        auth: "Bearer sk-UgqVHwbSdK0Gfu1ER9VoAZqyGd9u2SZECqxMVXjsOaP1p6RA"
-      },
-    ]
+
 
     let auth = qwenAuth
     let url = qwenUrl
@@ -836,7 +912,7 @@ export default struct ChatPage {
     if (m_id == 0){
       httpRequest.request(
         // 请求地址
-        ais[m_id].url,
+        this.ais[m_id].url,
         // 请求options: HttpRequestOptions
         {
           // 请求方式
@@ -845,11 +921,11 @@ export default struct ChatPage {
           header: {
             "Content-Type": "application/json",
             // 这里的Authorization 就是刚才工作台查看的 API-KEY
-            "Authorization": ais[m_id].auth // 脱敏处理
+            "Authorization": this.ais[m_id].auth // 脱敏处理
           },
           // 请求体
           extraData: {
-              "model": ais[m_id].model,
+              "model": this.ais[m_id].model,
               "input": {
                 "messages": [{'role': 'system', 'content': this.selectedIndex == -1 ? "": this.promptTextList[this.selectedIndex]},
                   {
@@ -908,10 +984,10 @@ export default struct ChatPage {
     }
     else if (m_id == 1){
       hilog.error(0x0000, 'testTag', 'm_id == 1');
-      hilog.error(0x0000, 'testTag', 'url: %{public}s', ais[m_id].url);
+      hilog.error(0x0000, 'testTag', 'url: %{public}s', this.ais[m_id].url);
       httpRequest.request(
         // 请求地址
-        ais[m_id].url,
+        this.ais[m_id].url,
         // 请求options: HttpRequestOptions
         {
           // 请求方式
@@ -920,11 +996,11 @@ export default struct ChatPage {
           header: {
             "Content-Type": "application/json",
             // 这里的Authorization 就是刚才工作台查看的 API-KEY
-            "Authorization": ais[m_id].auth // 脱敏处理
+            "Authorization": this.ais[m_id].auth // 脱敏处理
           },
           // 请求体
           extraData: {
-            "model": ais[m_id].model, // 指定用于对话的通义千问模型名
+            "model": this.ais[m_id].model, // 指定用于对话的通义千问模型名
             // ais[m_id].inputName: ais[m_id].inputBody,
             "messages": [{'role': 'system', 'content': this.selectedIndex == -1 ? "": this.promptTextList[this.selectedIndex]},{
               "role": "user",
@@ -981,10 +1057,10 @@ export default struct ChatPage {
     }
     else if (m_id ==2){
       hilog.error(0x0000, 'testTag', 'm_id == 2');
-      hilog.error(0x0000, 'testTag', 'url: %{public}s', ais[m_id].url);
+      hilog.error(0x0000, 'testTag', 'url: %{public}s', this.ais[m_id].url);
       httpRequest.request(
         // 请求地址
-        ais[m_id].url,
+        this.ais[m_id].url,
         // 请求options: HttpRequestOptions
         {
           // 请求方式
@@ -993,7 +1069,7 @@ export default struct ChatPage {
           header: {
             "Content-Type": "application/json",
             // 这里的Authorization 就是刚才工作台查看的 API-KEY
-            "X-Appbuilder-Authorization": ais[m_id].auth // 脱敏处理
+            "X-Appbuilder-Authorization": this.ais[m_id].auth // 脱敏处理
           },
           // 请求体
           extraData: {
@@ -1052,10 +1128,10 @@ export default struct ChatPage {
     }
     else if (m_id == 3){
       hilog.error(0x0000, 'testTag', 'm_id == 3');
-      hilog.error(0x0000, 'testTag', 'url: %{public}s', ais[m_id].url);
+      hilog.error(0x0000, 'testTag', 'url: %{public}s', this.ais[m_id].url);
       httpRequest.request(
         // 请求地址
-        ais[m_id].url,
+        this.ais[m_id].url,
         // 请求options: HttpRequestOptions
         {
           // 请求方式
@@ -1064,7 +1140,7 @@ export default struct ChatPage {
           header: {
             "Content-Type": "application/json",
             // 这里的Authorization 就是刚才工作台查看的 API-KEY
-            "Authorization": ais[m_id].auth // 脱敏处理
+            "Authorization": this.ais[m_id].auth // 脱敏处理
           },
           // 请求体
           extraData: {
@@ -1088,6 +1164,79 @@ export default struct ChatPage {
           hilog.error(0x0000, 'testTag', 'Request ALiYun success. data: %{public}s', JSON.stringify(data.result));
           httpRequest.destroy();
           let resp: KimiResponse = JSON.parse(data.result.toString())
+          hilog.error(0x0000, 'testTag', 'data.result.text: %{public}', resp.choices[0].message.content)
+          // this.chatList.push({ headSrc: $r("app.media.ic_user_head7"),
+          //   nickname: "老弟",
+          //   content: question,
+          //   time: "周一" })
+          // const chat = new ChatMessage(MessageType.text, res);
+
+
+          let answer : string = ''
+          answer = resp.choices[0].message.content
+
+          //TODO: save the AI response message to database
+          // 获取操作数据库的对象
+          const store = await this.getStoreInstance()
+          console.log("1")
+          // 添加一条数据
+          const id = await store.insert(this.tableName, {
+            id: null, // 新增时设置 id 为空值 null，用于自增 id
+            c_id: this.c_id,
+            msg: answer,
+            self: 0
+          } as ChatContent)
+
+          this.dataList.push({
+            name: "鲁班",
+            headSrc: $r("app.media.ic_user_head7"),
+            msgType: 0,
+            self: false,
+            msg: answer,
+          })
+
+          if (this.dataList.length == 2) {
+            this.c_des = resp.choices[0].message.content
+          }
+
+          this.scroller.scrollToIndex(this.dataList.length)
+        }
+      })
+    }
+    else{
+      hilog.error(0x0000, 'testTag', 'm_id == %{public}s', m_id);
+      hilog.error(0x0000, 'testTag', 'url: %{public}s', this.ais[m_id].url);
+      httpRequest.request(
+        // 请求地址
+        this.ais[m_id].url,
+        // 请求options: HttpRequestOptions
+        {
+          // 请求方式
+          method: http.RequestMethod.POST,
+          // 请求头
+          header: {
+            "Content-Type": "application/json",
+            // 这里的Authorization 就是刚才工作台查看的 API-KEY
+            "Authorization": this.ais[m_id].auth // 脱敏处理
+          },
+          // 请求体
+          extraData: {
+            "model": this.ais[m_id].model, // 指定用于对话的通义千问模型名
+            // ais[m_id].inputName: ais[m_id].inputBody,
+            "messages": [{'role': 'system', 'content': this.selectedIndex == -1 ? "": this.promptTextList[this.selectedIndex]},{
+              "role": "user",
+              "content": question // 请求发起方传入的问题
+            }]
+
+          }
+        }, async (err, data: http.HttpResponse) => {
+        if (err) {
+          hilog.error(0x0000, 'testTag', 'Failed to request ALiYun. Cause: %{public}s', JSON.stringify(err) ?? '');
+          httpRequest.destroy();
+        } else {
+          hilog.error(0x0000, 'testTag', 'Request ALiYun success. data: %{public}s', JSON.stringify(data.result));
+          httpRequest.destroy();
+          let resp: ZhiPuResponse = JSON.parse(data.result.toString())
           hilog.error(0x0000, 'testTag', 'data.result.text: %{public}', resp.choices[0].message.content)
           // this.chatList.push({ headSrc: $r("app.media.ic_user_head7"),
           //   nickname: "老弟",

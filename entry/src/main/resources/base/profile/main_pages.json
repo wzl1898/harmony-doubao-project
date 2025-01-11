@@ -7,6 +7,7 @@
     "pages/qrcode/MyQrCodePage",
     "pages/HardwareIndexPage",
     "pages/mine/PromptPage",
-    "pages/ImgGen"
+    "pages/ImgGen",
+    "pages/mine/AddModel"
   ]
 }
